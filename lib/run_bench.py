@@ -353,7 +353,7 @@ def compute_judgemark_results(results, run_index, test_model_outputs, verbose):
 
 
 
-def save_and_upload_results(run_id, formatted_datetime, bench_success, prompt_type, model_path, lora_path, quantization, benchmark_type, lang_suffix, this_score, parseable, n_iterations, inference_engine, ooba_params, include_patterns, exclude_patterns, judge_params, results, run_index, last_error, bench_tries, max_bench_retries, google_spreadsheet_url, save_result_to_db_fn):
+def save_and_upload_results(run_id, formatted_datetime, bench_success, prompt_type, model_path, lora_path, quantization, benchmark_type, lang_suffix, this_score, parseable, n_iterations, inference_engine, ooba_params, include_patterns, exclude_patterns, judge_params, results, run_index, last_error, bench_tries, max_bench_retries, google_spreadsheet_url, save_result_to_db_fn, eqbench_version):
 	if not os.path.exists(BENCH_RESULTS_PATH):
 		with open(BENCH_RESULTS_PATH, 'a') as f:
 			f.write('Run ID, Benchmark Completed, Prompt Format, Model Path, Lora Path, Quantization, Benchmark Score, Benchmark Version, Num Questions Parseable, Num Iterations, Inference Engine, Ooba Params, Download Filters, Error\n')
@@ -368,7 +368,7 @@ def save_and_upload_results(run_id, formatted_datetime, bench_success, prompt_ty
 					lora_path,
 					quantization,
 					round(this_score, 2),
-					f"{benchmark_type}{lang_suffix}",
+					f"{eqbench_version}{lang_suffix}",
 					parseable,
 					n_iterations,
 					inference_engine,
@@ -588,7 +588,7 @@ def run_generic_benchmark(run_id, model_path, lora_path, prompt_type, quantizati
 			if lora_path:
 						print('Lora:', lora_path)
 
-	save_and_upload_results(run_id, formatted_datetime, bench_success, prompt_type, model_path, lora_path, quantization, benchmark_type, lang_suffix, this_score, parseable, n_iterations, inference_engine, ooba_params, include_patterns, exclude_patterns, judge_params, results, run_index, last_error, bench_tries, max_bench_retries, google_spreadsheet_url, save_result_to_db_fn)
+	save_and_upload_results(run_id, formatted_datetime, bench_success, prompt_type, model_path, lora_path, quantization, benchmark_type, lang_suffix, this_score, parseable, n_iterations, inference_engine, ooba_params, include_patterns, exclude_patterns, judge_params, results, run_index, last_error, bench_tries, max_bench_retries, google_spreadsheet_url, save_result_to_db_fn, eqbench_version)
 
 	cleanup(model, tokenizer, inference_engine, launch_ooba, ooba_instance, delete_model_files, model_path, include_patterns, exclude_patterns, models_to_delete, models_remaining, verbose)
 
