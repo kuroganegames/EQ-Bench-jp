@@ -57,7 +57,7 @@ def setup_benchmark(benchmark_type, run_id, model_path, lora_path, prompt_type, 
 	return questions, process_fn, scoring_fn, save_result_to_db_fn, run_index, eqbench_version, test_model_outputs if benchmark_type == 'judgemark' else None
 
 
-def initialize_results(run_index, benchmark_type, resume, n_iterations, run_id, model_path, lora_path, prompt_type, quantization, inference_engine, ooba_params, include_patterns, exclude_patterns, judge_params, language):
+def initialize_results(run_index, benchmark_type, resume, n_iterations, run_id, model_path, lora_path, prompt_type, quantization, inference_engine, ooba_params, include_patterns, exclude_patterns, judge_params, language, eqbench_version):
 	results = {}
 	if resume and os.path.exists(RAW_RESULTS_PATH):
 		with open(RAW_RESULTS_PATH, 'r') as f:
@@ -69,7 +69,7 @@ def initialize_results(run_index, benchmark_type, resume, n_iterations, run_id, 
 		results[run_index] = {
 			'run_metadata': {
 					"run_id": run_id,
-					"eq_bench_version": benchmark_type,
+					"benchmark_type": benchmark_type,
 					"total_iterations": n_iterations,
 					"inference_engine": inference_engine,
 					"ooba_params": ooba_params,
@@ -80,6 +80,7 @@ def initialize_results(run_index, benchmark_type, resume, n_iterations, run_id, 
 		}
 		if benchmark_type == 'eq-bench':
 			results[run_index]['run_metadata'].update({
+					"eq_bench_version": eqbench_version,
 					"language": language,
 					"instruction_template": prompt_type,
 					"model_path": model_path,
@@ -368,7 +369,7 @@ def save_and_upload_results(run_id, formatted_datetime, bench_success, prompt_ty
 					lora_path,
 					quantization,
 					round(this_score, 2),
-					f"{eqbench_version}{lang_suffix}",
+					f"{benchmark_type}_{eqbench_version}{lang_suffix}",
 					parseable,
 					n_iterations,
 					inference_engine,
@@ -489,7 +490,7 @@ def run_generic_benchmark(run_id, model_path, lora_path, prompt_type, quantizati
 
 	questions, process_fn, scoring_fn, save_result_to_db_fn, run_index, eqbench_version, test_model_outputs = setup_benchmark(benchmark_type, run_id, model_path, lora_path, prompt_type, quantization, inference_engine, ooba_params, include_patterns, exclude_patterns, language, judge_params, questions_fn)
 
-	results = initialize_results(run_index, benchmark_type, resume, n_iterations, run_id, model_path, lora_path, prompt_type, quantization, inference_engine, ooba_params, include_patterns, exclude_patterns, judge_params, language)
+	results = initialize_results(run_index, benchmark_type, resume, n_iterations, run_id, model_path, lora_path, prompt_type, quantization, inference_engine, ooba_params, include_patterns, exclude_patterns, judge_params, language, eqbench_version)
 
 	initialize_iterations(results, run_index, n_iterations, benchmark_type, resume)
 
