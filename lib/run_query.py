@@ -318,7 +318,10 @@ def run_query(model_path, prompt_format, prompt, history, completion_tokens, mod
 		else:
 			inference_fn = run_pipeline_query
 
-		formatted_prompt = generate_prompt_from_template(prompt, prompt_format)		
+		if inference_fn in [run_chat_template_query, run_chat_query]:
+			formatted_prompt = prompt
+		else:
+			formatted_prompt = generate_prompt_from_template(prompt, prompt_format)		
 		return inference_fn(formatted_prompt, completion_tokens, model, tokenizer, temp)
 
 
