@@ -18,7 +18,7 @@ This is a LLM-as-a-judge benchmark using detailed criteria to assess the model's
 
 #### Judgemark
 
-This benchmark is the latest benchmark task in the EQ-Bench pipeline. It tests a model's ability to judge creative writing output from a set of pre-generated outputs from 20 test models. The writing prompts & judging process are the same as those used in the creative writing benchmark. Several metrics are aggregated on the judge's performance (correlation with other benchmarks + measures of spread), resulting in a "Judgemark" score.
+This is the latest benchmark task in the EQ-Bench pipeline. It tests a model's ability to judge creative writing from a set of pre-generated outputs from 20 test models. The writing prompts & judging process are the same as those used in the creative writing benchmark. Several metrics are aggregated on the judge's performance (correlation with other benchmarks + measures of spread), resulting in a "Judgemark" score.
 
 #### Launching the New Benchmarks
 
