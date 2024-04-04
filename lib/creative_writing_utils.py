@@ -25,7 +25,7 @@ CRITERIA_TO_IGNORE = [ # Removed these criteria for now as they were weakly disc
 ]
 
 
-def process_criteria(criteria_set, writing_prompt, reference_output, test_model_response, verbose, judge_params):
+def process_criteria(criteria_set, writing_prompt, reference_output, test_model_response, verbose, judge_params, judge_temp):
 	judging_prompt = create_judging_prompt(criteria_set, writing_prompt, reference_output, test_model_response)
 
 	#print(judging_prompt)
@@ -33,9 +33,10 @@ def process_criteria(criteria_set, writing_prompt, reference_output, test_model_
 	# Run judging process using judge model
 	success = False
 	tries = 0
+	#judge_temp = 0
 	while not success and tries < 3:
 		try:
-			judge_model_response = run_query(judge_params['judge_model'], None, judging_prompt, [], 3000, judge_params['judge_model'], None, 0.0, judge_params['judge_model_api'], None, False, None, openai_client_judge, api_key=judge_params['judge_model_api_key'])		
+			judge_model_response = run_query(judge_params['judge_model'], None, judging_prompt, [], 3000, judge_params['judge_model'], None, judge_temp, judge_params['judge_model_api'], None, False, None, openai_client_judge, api_key=judge_params['judge_model_api_key'])		
 			if judge_model_response:
 				success = True
 			else:
@@ -45,6 +46,7 @@ def process_criteria(criteria_set, writing_prompt, reference_output, test_model_
 			print(e)
 			time.sleep(5)
 			tries += 1
+			#judge_temp += 0.2
 
 	if verbose:
 		print(judge_model_response)
@@ -88,9 +90,14 @@ def process_writing_prompt(prompt_id, prompt_data, model_path, prompt_type, mode
 
 	judging_tries = 0
 	judging_success = False
+	judge_temp = 0
 	while not judging_success and judging_tries <= 3:
 		judging_tries += 1
 		try:
+			if TEST_TYPE == 'creative-writing' and prompt_id in results[run_index]['iterations'][run_iter]['test_model_response'] and len(results[run_index]['iterations'][run_iter]['test_model_response'][prompt_id]) > 400:
+				# this is for when the test has been conducted manually somewhere and the test_model_response fields have been populated but require judging
+				test_model_output = results[run_index]['iterations'][run_iter]['test_model_response'][prompt_id]
+
 			# Generate response from test model	
 			test_generation_success = False
 			if test_model_output != None: # these are pregenerated if we are running judgemark
@@ -140,10 +147,11 @@ def process_writing_prompt(prompt_id, prompt_data, model_path, prompt_type, mode
 				judge_model_response = process_criteria({
 					'criteria': combined_criteria,
 					'prefix_text': 'Now, rate the supplied model output on the following criteria:'
-				}, writing_prompt, reference_output, test_model_response, verbose, judge_params)
+				}, writing_prompt, reference_output, test_model_response, verbose, judge_params, judge_temp)
 				if not parse_scores(judge_model_response):
 					print(judge_model_response)
 					print('! Failed to parse scores in judge response')
+					judge_temp += 0.2
 					continue
 				scores.update(parse_scores(judge_model_response))
 				judge_model_responses.append(judge_model_response)

@@ -280,11 +280,14 @@ def calculate_creative_writing_score(run_index, results, results_path):
 	return round(10 * creative_writing_averaged_score, 2)
 
 
-def calculate_creative_writing_score_judgemark(run_index, model_name, results):
+def calculate_creative_writing_score_judgemark(run_index, model_name, results):	
 	RELATIVE_SCORING = False	
 	iteration_averages = []  # To hold the average scores of the best half of each iteration
 
-	for run_iter in results[run_index]['iterations']:
+	for run_iter in results[run_index]['iterations']:		
+		if int(run_iter) != 1:
+			# limit judgemark to 1 iteration for now
+			continue
 		prompt_scores = []
 		for prompt_id, scores in results[run_index]['iterations'][run_iter]['judgemark_results'][model_name]['individual_scores'].items():
 			scoresum = 0
