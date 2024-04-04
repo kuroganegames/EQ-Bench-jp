@@ -22,7 +22,7 @@ This benchmark is the latest benchmark task in the EQ-Bench pipeline. It tests a
 
 #### Launching the New Benchmarks
 
-To launch individual benchmarks: 
+To launch individual benchmark tasks: 
 
 `python eq-bench.py --benchmarks eq-bench`
 
@@ -30,7 +30,7 @@ To launch individual benchmarks:
 
 `python eq-bench.py --benchmarks judgemark`
 
-The creative writing benchmark uses a judge model to assess the test model's output. To run creative-writing or judgemark benchmarks, you will also need to set these parameters in your config.cfg:
+The creative-writing and judgemark tasks require the following parameters to be configures in your config.cfg:
 
 `judge_model_api = `
 `judge_model = `
