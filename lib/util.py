@@ -114,10 +114,11 @@ def parse_batch(batch, ooba_launch_script, launch_ooba):
 				raise Exception('ooba_launch_script not set in config.cfg')
 			
 			prompt_format = prompt_format.strip()
-			if inference_engine in ['transformers', 'llama']:
-				template_path = './instruction-templates/' + prompt_format + '.yaml'
-				if (not prompt_format) or not os.path.exists(template_path):
-					raise Exception('Error: prompt template not found: ' + template_path)
+			if inference_engine in ['transformers', 'llama.cpp']:
+				if prompt_format:
+					template_path = './instruction-templates/' + prompt_format + '.yaml'
+					if (not prompt_format) or not os.path.exists(template_path):
+						raise Exception('Error: prompt template not found: ' + template_path)
 			elif inference_engine == 'ooba':
 				ooba_dir = os.path.dirname(ooba_launch_script)
 				if prompt_format:

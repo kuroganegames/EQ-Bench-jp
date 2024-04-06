@@ -48,6 +48,7 @@ OPENSOURCE_MODELS_INFERENCE_METHODS = {
 	'Qwen/Qwen-14B-Chat': run_chat_query,
 	'google/gemma-7b-it': run_chat_template_query,
 	'google/gemma/2b-it': run_chat_template_query,
+	'google/gemma-1.1-7b-it': run_chat_template_query,
 }
 
 
@@ -284,6 +285,8 @@ def parse_yaml(template_path):
 		raise FileNotFoundError(f"Template file not found: {template_path}")
 	
 def generate_prompt_from_template(prompt, prompt_type):
+	if not prompt_type:
+		return prompt
 	template_path = f"instruction-templates/{prompt_type}.yaml"
 	template = parse_yaml(template_path)
 	default_system_message = "You are an expert in emotional analysis."

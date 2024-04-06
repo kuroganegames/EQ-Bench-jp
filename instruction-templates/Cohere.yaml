@@ -1,0 +1,5 @@
+user: "<|USER_TOKEN|>"
+bot: "<|CHATBOT_TOKEN|>"
+turn_template: "<|START_OF_TURN_TOKEN|><|user|><|user-message|><|END_OF_TURN_TOKEN|><|START_OF_TURN_TOKEN|><|bot|><|bot-message|>"
+context: "<BOS_TOKEN>"
+system_message: ""
