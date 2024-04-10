@@ -12,7 +12,7 @@ def run_chat_template_query(prompt, completion_tokens, model, tokenizer, temp):
 	]
 	prompt = tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)
 	inputs = tokenizer.encode(prompt, add_special_tokens=True, return_tensors="pt")
-	outputs = model.generate(input_ids=inputs.to(model.device), max_new_tokens=completion_tokens, temperature=temp)
+	outputs = model.generate(input_ids=inputs.to(model.device), max_new_tokens=completion_tokens, temperature=temp, do_sample=True)
 	output = tokenizer.decode(outputs[0], skip_special_tokens=True)
 	# Trim off the prompt
 	trimmed_output = output[len(prompt):].strip()	

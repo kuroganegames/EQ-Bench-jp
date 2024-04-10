@@ -32,13 +32,13 @@ def load_model(base_model_path, lora_path, quantization, trust_remote_code = Fal
 		base_model = AutoModelForCausalLM.from_pretrained(
 			base_model_path,
 			quantization_config=quant_config,
-			device_map={"": 0},
+			device_map="auto",
 			trust_remote_code=trust_remote_code
 		)
 	else:
 		base_model = AutoModelForCausalLM.from_pretrained(
 			base_model_path,
-			device_map={"": 0},
+			device_map="auto",
 			trust_remote_code=trust_remote_code
 		)
 
