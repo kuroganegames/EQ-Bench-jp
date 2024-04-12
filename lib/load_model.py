@@ -39,7 +39,8 @@ def load_model(base_model_path, lora_path, quantization, trust_remote_code = Fal
 		base_model = AutoModelForCausalLM.from_pretrained(
 			base_model_path,
 			device_map="auto",
-			trust_remote_code=trust_remote_code
+			trust_remote_code=trust_remote_code,
+			torch_dtype=torch.bfloat16
 		)
 
 	if lora_path:
