@@ -29,7 +29,10 @@ def run_pipeline_query(prompt, completion_tokens, model, tokenizer, temp):
 	output = text_gen(prompt)
 	out_str = output[0]['generated_text']
 	# Trim off the prompt
-	trimmed_output = out_str[len(prompt):].strip()
+	if type(out_str) == str:
+		trimmed_output = out_str[len(prompt):].strip()
+	else:
+		trimmed_output = out_str[-1]['content'].strip()
 	return trimmed_output
 
 def run_llama3_query(prompt, completion_tokens, model, tokenizer, temp):
