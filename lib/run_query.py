@@ -4,7 +4,9 @@ import yaml
 import requests
 import json
 import anthropic
+import google.generativeai as genai
 anthropic_client = None
+gemini_model = None
 
 def run_chat_template_query(prompt, completion_tokens, model, tokenizer, temp):
 	chat = [
@@ -23,13 +25,43 @@ def run_chat_query(prompt, completion_tokens, model, tokenizer, temp):
 	return response
 
 def run_pipeline_query(prompt, completion_tokens, model, tokenizer, temp):
-	toks = tokenizer(prompt)
+	if type(prompt) == str:
+		toks = tokenizer(prompt)
 	n_toks = len(toks['input_ids'])
 	text_gen = pipeline(task="text-generation", model=model, tokenizer=tokenizer, do_sample=True, temperature=temp, max_new_tokens=completion_tokens)
 	output = text_gen(prompt)
 	out_str = output[0]['generated_text']
 	# Trim off the prompt
 	trimmed_output = out_str[len(prompt):].strip()
+	return trimmed_output
+
+def run_llama3_query(prompt, completion_tokens, model, tokenizer, temp):
+	text_gen = pipeline(task="text-generation", model=model, tokenizer=tokenizer, do_sample=True, temperature=temp, max_new_tokens=completion_tokens)
+	messages = [
+		{"role": "system", "content": "You are an expert in emotional intelligence."},
+		{"role": "user", "content": prompt},
+	]
+	prompt = text_gen.tokenizer.apply_chat_template(
+				messages,
+				tokenize=False,
+				add_generation_prompt=True
+	)
+
+	terminators = [
+		tokenizer.eos_token_id,
+		tokenizer.convert_tokens_to_ids("<|eot_id|>")
+	]
+
+	outputs =text_gen(
+		prompt,
+		max_new_tokens=completion_tokens,
+		eos_token_id=terminators,
+		do_sample=True,
+		temperature=temp,
+	)
+
+	trimmed_output = outputs[0]["generated_text"][len(prompt):].strip()
+
 	return trimmed_output
 
 def run_generate_query(prompt, completion_tokens, model, tokenizer, temp):
@@ -49,8 +81,9 @@ OPENSOURCE_MODELS_INFERENCE_METHODS = {
 	'google/gemma-7b-it': run_chat_template_query,
 	'google/gemma/2b-it': run_chat_template_query,
 	'google/gemma-1.1-7b-it': run_chat_template_query,
+	'meta-llama/Meta-Llama-3-70B-Instruct': run_llama3_query,
+	'meta-llama/Meta-Llama-3-8B-Instruct': run_llama3_query,
 }
-
 
 def run_llamacpp_query(prompt, prompt_format, completion_tokens, temp):
 	# Generate the prompt from the template
@@ -86,6 +119,7 @@ def run_llamacpp_query(prompt, prompt_format, completion_tokens, temp):
 	return None
 
 
+
 def run_anthropic_query(prompt, history, completion_tokens, temp, model, api_key):	
 	global anthropic_client
 	if not anthropic_client:
@@ -101,7 +135,7 @@ def run_anthropic_query(prompt, history, completion_tokens, temp, model, api_key
 			model=model,
 			max_tokens=completion_tokens,
 			temperature=temp,
-			system="You are an expert in emotional intelligence.",
+			system="You are an expert in emotional analysis.",
 			messages=messages,
 			stream=False
 		)
@@ -114,6 +148,57 @@ def run_anthropic_query(prompt, history, completion_tokens, temp, model, api_key
 			print('Error: message is empty')
 			time.sleep(5)
 
+	except Exception as e:
+		print("Request failed.")
+		print(e)
+		time.sleep(5)
+
+	return None
+
+def run_gemini_query(prompt, history, completion_tokens, temp, model, api_key):
+	global gemini_model
+	try:
+		if not gemini_model:
+			genai.configure(api_key=api_key)
+			gemini_model = genai.GenerativeModel('gemini-1.5-pro-latest')
+
+		safety_settings = [
+			{
+					"category": "HARM_CATEGORY_HARASSMENT",
+					"threshold": "BLOCK_NONE",
+			},
+			{
+					"category": "HARM_CATEGORY_HATE_SPEECH",
+					"threshold": "BLOCK_NONE",
+			},
+			{
+					"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+					"threshold": "BLOCK_NONE",
+			},
+			{
+					"category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+					"threshold": "BLOCK_NONE",
+			},
+		  
+		]
+		response = gemini_model.generate_content(prompt,
+				generation_config=genai.types.GenerationConfig(
+				candidate_count=1,
+				max_output_tokens=completion_tokens,
+				temperature=temp),
+				safety_settings=safety_settings)		
+
+		try:
+			inference = response.text
+		except Exception as e:
+			print(response.parts)
+
+		if inference:
+			return inference.strip()
+		else:
+			print('Error: message is empty')
+			time.sleep(5)
+		
 	except Exception as e:
 		print("Request failed.")
 		print(e)
@@ -312,6 +397,8 @@ def run_query(model_path, prompt_format, prompt, history, completion_tokens, mod
 		return run_anthropic_query(prompt, history, completion_tokens, temp, model_path, api_key)
 	elif inference_engine == 'mistralai':		
 		return run_mistral_query(prompt, history, completion_tokens, temp, model_path, api_key)
+	elif inference_engine == 'gemini':		
+		return run_gemini_query(prompt, history, completion_tokens, temp, model_path, api_key)
 	elif inference_engine == 'ooba':
 		return run_ooba_query(prompt, history, prompt_format, completion_tokens, temp, ooba_instance, launch_ooba, ooba_request_timeout)
 	else: # transformers
@@ -324,7 +411,16 @@ def run_query(model_path, prompt_format, prompt, history, completion_tokens, mod
 		if inference_fn in [run_chat_template_query, run_chat_query]:
 			formatted_prompt = prompt
 		else:
-			formatted_prompt = generate_prompt_from_template(prompt, prompt_format)		
+			if prompt_format:
+				formatted_prompt = generate_prompt_from_template(prompt, prompt_format)		
+			elif inference_fn == run_pipeline_query:
+				# If no prompt format has been specified and we are using pipeline for inference,
+	 			# then format the pipeline in a messages dict so pipeline knows to apply the 
+	  			# model's encoded chat template.
+				formatted_prompt = [
+					{"role": "system", "content": "You are an expert in emotional intelligence."},
+					{"role": "user", "content": prompt},
+				]
 		return inference_fn(formatted_prompt, completion_tokens, model, tokenizer, temp)
 
 

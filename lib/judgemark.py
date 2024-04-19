@@ -224,6 +224,7 @@ def calculate_top_n_correlations(data):
 	return correlations
 
 
+# normalise the score to a 0-1 range based on the provided floor & ceiling values
 def normalize_score(score, min_score, max_score):
 	if score >= max_score:
 		return 1.0
@@ -253,18 +254,7 @@ def calculate_metrics(data):
 	metrics.update(top_n_correlations)
 	
 	# Normalize metrics to 0-1 range
-	normalized_metrics = {}
-	for metric, value in metrics.items():
-		if metric == 'mean_score':
-			continue  # Skip mean, as we're leaving it out of the aggregate score
-		elif metric == 'range' and False:
-			normalized_metrics[metric] = normalize_score(value, 0, 60)
-		elif metric == 'std_dev':
-			normalized_metrics[metric] = normalize_score(value, 0, 15)
-		elif metric == 'std_dev_top_5' and False:
-			normalized_metrics[metric] = normalize_score(value, 0, 2)
-		elif metric == 'CV' and False:
-			normalized_metrics[metric] = normalize_score(value, 0, 0.4)
+	normalized_metrics = {}	
 				
 	kendalls_correlations = [value for key, value in metrics.items() if key.startswith('kendall_')]
 	pearsons_correlations = [value for key, value in metrics.items() if key.startswith('pearson_')]
@@ -274,6 +264,7 @@ def calculate_metrics(data):
 	
 	normalized_metrics['avg_kendalls'] = normalize_score(avg_kendalls, 0, 1)
 	normalized_metrics['avg_pearsons'] = normalize_score(avg_pearsons, 0, 1)
+	normalized_metrics['std_dev'] = normalize_score(metrics['std_dev'], 0, 15)
 
 	# Calculate aggregate score
 	aggregate_score = sum(normalized_metrics.values()) / len(normalized_metrics) * 100

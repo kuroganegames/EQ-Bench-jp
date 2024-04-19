@@ -44,7 +44,7 @@ def process_criteria(criteria_set, writing_prompt, reference_output, test_model_
 				tries += 1
 		except Exception as e:
 			print(e)
-			time.sleep(5)
+			time.sleep(30)
 			tries += 1
 			#judge_temp += 0.2
 
@@ -104,7 +104,7 @@ def process_writing_prompt(prompt_id, prompt_data, model_path, prompt_type, mode
 				test_model_response = test_model_output
 				test_generation_success = True # automatic success!
 			else:		
-				temp = 0.5
+				temp = 0.7
 				tries = 0		
 				while not test_generation_success and tries <= 3:
 					tries += 1
@@ -113,6 +113,7 @@ def process_writing_prompt(prompt_id, prompt_data, model_path, prompt_type, mode
 						this_writing_prompt += '\n\nDo not use language or themes that would get flagged by your content filter (Keep it PG-13).'
 					# Generate response from test model for creative writing benchmark
 					test_model_response = run_query(model_path, prompt_type, writing_prompt, [], 3000, model, tokenizer, temp, inference_engine, ooba_instance, launch_ooba, ooba_request_timeout, openai_client)
+	  				
 
 					if not test_model_response or len(test_model_response) < 300:				
 						temp += 0.1
@@ -148,11 +149,16 @@ def process_writing_prompt(prompt_id, prompt_data, model_path, prompt_type, mode
 					'criteria': combined_criteria,
 					'prefix_text': 'Now, rate the supplied model output on the following criteria:'
 				}, writing_prompt, reference_output, test_model_response, verbose, judge_params, judge_temp)
+
+				# gemini likes to add *'s as markdown formatting. we can safely strip these out.
+				judge_model_response = judge_model_response.replace('*',"")
+
 				if not parse_scores(judge_model_response):
 					print(judge_model_response)
 					print('! Failed to parse scores in judge response')
 					judge_temp += 0.2
 					continue
+				
 				scores.update(parse_scores(judge_model_response))
 				judge_model_responses.append(judge_model_response)
 				judging_success = True
@@ -161,6 +167,8 @@ def process_writing_prompt(prompt_id, prompt_data, model_path, prompt_type, mode
 					future_to_criteria = {executor.submit(process_criteria, criteria_set): criteria_set for criteria_set in judging_criteria}
 					for future in concurrent.futures.as_completed(future_to_criteria):
 						judge_model_response = future.result()
+						# gemini likes to add *'s as markdown formatting. we can safely strip these out.
+						judge_model_response = judge_model_response.replace('*',"")
 						scores.update(parse_scores(judge_model_response))			
 						judge_model_responses.append(judge_model_response)
 				judging_success = True
@@ -332,6 +340,8 @@ You are an expert in assessing creative writing. Your task is to score the quali
 - Some models produce overly long outputs. You should neither penalise nor favour this if it happens; simply assess the writing on its merit. You should however penalise overly short pieces.
 
 - The test model's output can suddenly truncate because of token length constraints. If you notice that this has occurred, don't penalise it.
+
+- Do not use markdown in your response. Use the designated output format exactly.
 
 - Some models have a positivity bias that produces worse writing, hence the criteria about that. Don't let the over-abundance of these criteria influence your assessment; it will only apply to some model outputs and you will know it when you see it. Likewise, there are a lot of "negative" critical criteria; these will not always apply and don't let their over-abundance colour your perception of the writing.
 

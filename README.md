@@ -8,6 +8,12 @@ The latest leaderboard can be viewed at [EQ-Bench Leaderboard](https://eqbench.c
 
 ## News
 
+### 2024-04-19 Minor updates
+
+- Changed behaviour when using Transformers and no chat template is specified. In this scenario, the benchmark will now apply the tokenizer's chat template if there is one.
+- Models are now loaded in 16 bit precision if "none" quantisation is selected.
+- Preliminary support for Llama3 models (adding <|eot_id|> to the tokenizer).
+
 ### Version 2.3
 
 This version includes two new benchmarks: `creative-writing` and `judgemark`.
@@ -256,7 +262,9 @@ EQ-Bench uses the same instruction template format as the Oobabooga library. You
 - If using `transformers` as the inference engine, the benchmark pipeline uses templates located in `[EQ-Bench dir]/instruction-templates`.
 - If using `ooba` as the inference engine, the pipeline uses templates located in `[ooba dir]/instruction-templates`
 
-When using ooba, you have the option to leave the prompt format blank in config.cfg and ooba will make its best guess as to what the prompt format should be.
+When using transformers, if you leave the prompt format blank in config.cfg, transformers will apply the chat template in the tokenizer if there is one.
+
+When using ooba, if you leave the prompt format blank in config.cfg, ooba will make its best guess as to what the prompt format should be.
 
 ## Setting up Firebase / Firestore for Results Uploading (Optional)
 
