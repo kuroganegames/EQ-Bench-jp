@@ -421,6 +421,8 @@ def run_query(model_path, prompt_format, prompt, history, completion_tokens, mod
 					{"role": "system", "content": "You are an expert in emotional intelligence."},
 					{"role": "user", "content": prompt},
 				]
+			else:
+				formatted_prompt = prompt
 		return inference_fn(formatted_prompt, completion_tokens, model, tokenizer, temp)
 
 
