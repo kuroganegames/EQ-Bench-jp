@@ -1,10 +1,13 @@
 import pandas as pd
 import numpy as np
 from scipy.stats import pearsonr, kendalltau
+from scipy import stats
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.metrics import mean_squared_error
 from sklearn.pipeline import make_pipeline
+from scipy.stats import f_oneway
+from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 from lib.scoring import calculate_creative_writing_score_judgemark
 
@@ -124,7 +127,41 @@ def create_and_save_chart(X, y, judge_mean_score, actual_judge_score, judge_name
 	plt.savefig(f'judgemark_scatter_{judge_name_safe}.png')
 	plt.close()
 
-
+def create_and_save_score_ci_chart(model_scores, raw_criteria_scores_by_model, judge_name):
+	models = list(model_scores.keys())
+	scores = list(model_scores.values())
+	
+	# Sort models and scores based on scores in ascending order
+	sorted_indices = np.argsort(scores)
+	sorted_models = [models[i] for i in sorted_indices]
+	sorted_scores = [scores[i] for i in sorted_indices]
+	
+	cis = []
+	for model_name in sorted_models:
+		if model_name in raw_criteria_scores_by_model:
+			raw_scores = raw_criteria_scores_by_model[model_name]
+			ci = stats.t.interval(0.95, len(raw_scores)-1, loc=np.mean(raw_scores), scale=stats.sem(raw_scores))
+			cis.append(ci)
+		else:
+			cis.append((0, 0))  # Placeholder if raw criteria scores are not available for a model
+	
+	plt.figure(figsize=(10, 6))
+	plt.barh(range(len(sorted_models)), sorted_scores, color='blue', alpha=0.7)
+	
+	for i, ci in enumerate(cis):
+		plt.errorbar(sorted_scores[i], i, xerr=[[abs(sorted_scores[i]-ci[0])], [abs(ci[1]-sorted_scores[i])]], capsize=5, color='red', linewidth=2, label='95% CI' if i == 0 else None)
+	
+	plt.title(f'Model Scores and 95% CI - Judge: {judge_name}')
+	plt.xlabel('Scores')
+	plt.ylabel('Models')
+	plt.yticks(range(len(sorted_models)), sorted_models)
+	plt.legend(loc='lower right')
+	plt.grid(True)
+	plt.tight_layout()
+	
+	judge_name_safe = judge_name.replace("/", "__").replace(" ", "_")
+	plt.savefig(f'judgemark_score_ci_{judge_name_safe}.png')
+	plt.close()
 
 def calculate_self_bias_polynomial(data, ignore_list, degree=2):
 	judges = list(data.keys())
@@ -233,7 +270,94 @@ def normalize_score(score, min_score, max_score):
 	else:
 		return (score - min_score) / (max_score - min_score)
 
-def calculate_metrics(data):
+def calculate_separation_metric(model_scores, raw_criteria_scores_by_model):
+	models = list(model_scores.keys())
+	scores = list(model_scores.values())
+	
+	# Sort models and scores based on scores in ascending order
+	sorted_indices = np.argsort(scores)
+	sorted_models = [models[i] for i in sorted_indices]
+	sorted_scores = [scores[i] for i in sorted_indices]
+	
+	cis = []
+	for model_name in sorted_models:
+		if model_name in raw_criteria_scores_by_model:
+			raw_scores = raw_criteria_scores_by_model[model_name]
+			ci = stats.t.interval(0.95, len(raw_scores)-1, loc=np.mean(raw_scores), scale=stats.sem(raw_scores))
+			cis.append(ci)
+		else:
+			cis.append((0, 0))  # Placeholder if raw criteria scores are not available for a model
+	
+	# Calculate the overlapping and non-overlapping regions
+	overlapping_range = 0
+	non_overlapping_range = 0
+	for i in range(len(sorted_scores) - 1):
+		current_ci = cis[i]
+		next_ci = cis[i + 1]
+		
+		if current_ci[1] > next_ci[0]:
+			# Overlapping region
+			overlapping_range += min(current_ci[1], next_ci[1]) - next_ci[0]
+		else:
+			# Non-overlapping region
+			non_overlapping_range += next_ci[0] - current_ci[1]
+	
+	# Calculate the separation metric
+	#total_range = sorted_scores[-1] - sorted_scores[0]
+	#separation_metric = non_overlapping_range / total_range
+	print('overlapping_range', overlapping_range)
+	print('non_overlapping_range', non_overlapping_range)
+	
+	return overlapping_range
+
+from scipy.stats import f_oneway
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+import numpy as np
+
+def perform_cluster_analysis(model_scores):
+	# Trim the score lists to the size of the smallest list
+	min_length = min(len(scores) for scores in model_scores.values())
+	trimmed_scores = {model: scores[:min_length] for model, scores in model_scores.items()}
+	
+	# Extract trimmed scores into a 2D array
+	scores_array = np.array(list(trimmed_scores.values()))
+	
+	# Perform one-way ANOVA
+	f_statistic, p_value = f_oneway(*scores_array)
+	print(f"One-way ANOVA - F-statistic: {f_statistic:.2f}, p-value: {p_value:.4f}")
+	
+	# Determine the optimal number of clusters using the elbow method
+	wcss = []
+	for i in range(1, min(11, len(scores_array))):
+		kmeans = KMeans(n_clusters=i, init='k-means++', random_state=42)
+		kmeans.fit(scores_array)
+		wcss.append(kmeans.inertia_)
+	
+	plt.figure(figsize=(8, 5))
+	plt.plot(range(1, min(11, len(scores_array))), wcss)
+	plt.title('Elbow Method')
+	plt.xlabel('Number of Clusters')
+	plt.ylabel('WCSS')
+	plt.tight_layout()
+	plt.savefig('elbow_method_plot.png')
+	plt.close()
+	
+	# Choose the optimal number of clusters based on the elbow point
+	optimal_clusters = 3  # Example value, adjust based on the elbow point
+	
+	# Perform k-means clustering
+	kmeans = KMeans(n_clusters=optimal_clusters, init='k-means++', random_state=42)
+	kmeans.fit(scores_array)
+	cluster_labels = kmeans.labels_
+	
+	# Print the cluster labels for each model
+	for model, label in zip(trimmed_scores.keys(), cluster_labels):
+		print(f"Model: {model}, Cluster: {label}")
+	
+	return f_statistic, p_value, optimal_clusters, cluster_labels
+
+def calculate_metrics(data, avg_ci_range, f_statistic):
 	metrics = {
 		'mean_score': data['judgemark'].mean(),
 		'range': data['judgemark'].max() - data['judgemark'].min(),
@@ -265,6 +389,14 @@ def calculate_metrics(data):
 	normalized_metrics['avg_kendalls'] = normalize_score(avg_kendalls, 0, 1)
 	normalized_metrics['avg_pearsons'] = normalize_score(avg_pearsons, 0, 1)
 	normalized_metrics['std_dev'] = normalize_score(metrics['std_dev'], 0, 15)
+	normalized_metrics['anova_f_statistic'] = normalize_score(f_statistic, 0, 28)
+	
+
+	# normalise the avg CI range (lower is better) into a 0-1 value where higher is better
+	if avg_ci_range > 7:
+		avg_ci_range = 7
+	#normalized_metrics['avg_ci_range'] = normalize_score((7-avg_ci_range), 0, 7)
+
 
 	# Calculate aggregate score
 	aggregate_score = sum(normalized_metrics.values()) / len(normalized_metrics) * 100
@@ -274,33 +406,58 @@ def calculate_metrics(data):
 
 def compute_judgemark_results(results, run_index, test_model_outputs, verbose):
 	judge_model = results[run_index]['run_metadata']['judge_model']
-	print('\n#',judge_model)
+	print('\n#', judge_model)
 	results[run_index]['judgemark_results'] = {}
 	model_scores = {}
+	item_scores_by_model = {}
 	print('\nTest model scores:')
+	raw_criteria_scores_by_model = {}
 	for model_name, _ in test_model_outputs.items():
 		# This is a placeholder for wherever you calculate the creative writing score
-		creative_writing_score = calculate_creative_writing_score_judgemark(run_index, model_name, results)
+		creative_writing_score, raw_criteria_scores, individual_item_scores = calculate_creative_writing_score_judgemark(run_index, model_name, results)
+		
 		if creative_writing_score is not None:
-			model_scores[model_name] = creative_writing_score			
-			print(round(creative_writing_score, 2), model_name)
+				raw_criteria_scores_by_model[model_name] = raw_criteria_scores
+				model_scores[model_name] = creative_writing_score
+				item_scores_by_model[model_name] = individual_item_scores
+				print(round(creative_writing_score, 2), model_name)
 	
+	overlapping_range = calculate_separation_metric(model_scores, item_scores_by_model)
+	
+	# Calculate the average magnitude of the CI range for all models
+	ci_ranges = []
+	for model_name, scores in item_scores_by_model.items():
+		ci = stats.t.interval(0.95, len(scores)-1, loc=np.mean(scores), scale=stats.sem(scores))
+		ci_range = ci[1] - ci[0]
+		ci_ranges.append(ci_range)
+	avg_ci_range = round(np.mean(ci_ranges),2)
+	results[run_index]['judgemark_results']['avg_ci_range'] = avg_ci_range
+	
+	#print(ci_ranges)
+
 	mean_score = np.mean(list(model_scores.values()))
 	std_dev = np.std(list(model_scores.values()), ddof=1)  # Using sample standard deviation
-	
 	results[run_index]['judgemark_results'] = {
 		'mean_score': mean_score,
 		'std_dev': std_dev,
 		'model_scores': model_scores
 	}
+	
+	# Create and save the chart
+	create_and_save_score_ci_chart(model_scores, item_scores_by_model, judge_model)
 
 	# Merge Judgemark results with other benchmarks into a DataFrame
 	df_combined = merge_benchmarks(results[run_index]['judgemark_results'], other_benchmarks_str)
 	
-	# Calculate extended metrics
-	extended_metrics = calculate_metrics(df_combined)
+	#print('Performing cluster analysis...')
+	f_statistic, p_value, optimal_clusters, cluster_labels = perform_cluster_analysis(item_scores_by_model)
+	print('ANOVA f-statistic',f_statistic)
+	print('ANOVA p-value', p_value)
+	#print('optimal_clusters', optimal_clusters)
+	#print('cluster_labels', cluster_labels)
 
-	
+	# Calculate extended metrics
+	extended_metrics = calculate_metrics(df_combined, avg_ci_range, f_statistic)	
 
 	judgemark_results_for_self_bias = parse_self_bias_judgemark_results(judgemark_results_for_self_bias_str)
 
@@ -318,9 +475,11 @@ def compute_judgemark_results(results, run_index, test_model_outputs, verbose):
 	else:
 		print('Self bias:', 'N/A')
 	
+	print('Avg 95% CI:', avg_ci_range)
 
 	results[run_index]['judgemark_results']['extended_metrics'] = extended_metrics
 
 	for k,v in results[run_index]['judgemark_results']['extended_metrics'].items():
 		print(k, round(v, 2))
 	print()
+	print(len(raw_criteria_scores))

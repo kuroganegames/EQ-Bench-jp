@@ -17,6 +17,8 @@ def signal_handler(sig, frame):
 	if ooba_instance:
 		print('Stopping ooba...')
 		ooba_instance.stop()
+	# Wait a moment for any writes to finish
+	time.sleep(2)
 	sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)

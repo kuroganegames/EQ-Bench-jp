@@ -71,6 +71,8 @@ def process_writing_prompt(prompt_id, prompt_data, model_path, prompt_type, mode
 	
 	if judge_params['judge_model_api'] == 'openai' and not openai_client_judge:
 		openai_client_judge = openai.OpenAI(
+			#base_url='https://api.together.xyz',
+			base_url = 'https://api-inference.huggingface.co/models/CohereForAI/c4ai-command-r-plus/v1/',
 			api_key=judge_params['judge_model_api_key'],
 		)
 
@@ -90,7 +92,7 @@ def process_writing_prompt(prompt_id, prompt_data, model_path, prompt_type, mode
 
 	judging_tries = 0
 	judging_success = False
-	judge_temp = 0
+	judge_temp = 0.01
 	while not judging_success and judging_tries <= 3:
 		judging_tries += 1
 		try:

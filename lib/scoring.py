@@ -283,6 +283,8 @@ def calculate_creative_writing_score(run_index, results, results_path):
 def calculate_creative_writing_score_judgemark(run_index, model_name, results):	
 	RELATIVE_SCORING = False	
 	iteration_averages = []  # To hold the average scores of the best half of each iteration
+	raw_criteria_scores = []
+	individual_item_scores = []
 
 	for run_iter in results[run_index]['iterations']:		
 		if int(run_iter) != 1:
@@ -293,18 +295,21 @@ def calculate_creative_writing_score_judgemark(run_index, model_name, results):
 			scoresum = 0
 			for criteria, score in scores.items():
 					criteria_lower = criteria.lower().strip()
-					if RELATIVE_SCORING:
+					if RELATIVE_SCORING:						
 						if any(neg_criterion in criteria_lower for neg_criterion in neg_criteria):
-							scoresum += ((-1 * score) + 10) / 2
+							this_criteria_score = ((-1 * score) + 10) / 2
 						else:
-							scoresum += (score + 10) / 2
+							this_criteria_score = (score + 10) / 2
 					else:
 						if any(neg_criterion in criteria_lower for neg_criterion in neg_criteria):
-							scoresum += 10 - score
+							this_criteria_score = 10 - score
 						else:
-							scoresum += score
+							this_criteria_score = score
+					scoresum += this_criteria_score
+					raw_criteria_scores.append(10*this_criteria_score)
 			if len(scores):
 				prompt_scores.append(scoresum / len(scores))
+				individual_item_scores.append(10*scoresum / len(scores))
 
 		if len(prompt_scores) > 10:
 			iteration_average = sum(prompt_scores) / len(prompt_scores)
@@ -316,4 +321,4 @@ def calculate_creative_writing_score_judgemark(run_index, model_name, results):
 	else:
 		creative_writing_averaged_score = 0
 
-	return round(10 * creative_writing_averaged_score, 2)
+	return round(10 * creative_writing_averaged_score, 2), raw_criteria_scores, individual_item_scores
