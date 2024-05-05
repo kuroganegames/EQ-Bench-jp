@@ -63,8 +63,8 @@ def calculate_score_fullscale(reference, user):
 	emotions_dict = {}
 	for emotion, user_emotion_score in user.items():
 		for i in range(1, 5):
-			if emotion == reference[f'emotion{i}']:
-				emotions_dict[emotion] = True
+			if emotion.lower() == reference[f'emotion{i}'].lower():
+				emotions_dict[emotion.lower()] = True
 	if len(emotions_dict) != 4:
 		print('! Error: emotions did not match reference')
 		print(user)
@@ -76,7 +76,7 @@ def calculate_score_fullscale(reference, user):
 	for emotion, user_emotion_score in user.items():
 		# If this emotion is in the reference, calculate the difference between the user's score and the reference score.
 		for i in range(1, 5):
-			if emotion == reference[f'emotion{i}']:
+			if emotion.lower() == reference[f'emotion{i}'].lower():
 				d = abs(float(user_emotion_score) - float(reference[f'emotion{i}_score']))
 				# this will be a value between 0 and 10
 				if d == 0:

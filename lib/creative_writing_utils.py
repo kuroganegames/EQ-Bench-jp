@@ -152,7 +152,9 @@ def process_writing_prompt(prompt_id, prompt_data, model_path, prompt_type, mode
 				}, writing_prompt, reference_output, test_model_response, verbose, judge_params, judge_temp)
 
 				# gemini likes to add *'s as markdown formatting. we can safely strip these out.
-				judge_model_response = judge_model_response.replace('*',"")
+				judge_model_response = judge_model_response.replace('*','')
+				# other models (like wizardlm 8x22) like to add square brackets
+				judge_model_response = judge_model_response.replace('[','').replace(']', '')
 
 				if not parse_scores(judge_model_response):
 					print(judge_model_response)
@@ -169,7 +171,9 @@ def process_writing_prompt(prompt_id, prompt_data, model_path, prompt_type, mode
 					for future in concurrent.futures.as_completed(future_to_criteria):
 						judge_model_response = future.result()
 						# gemini likes to add *'s as markdown formatting. we can safely strip these out.
-						judge_model_response = judge_model_response.replace('*',"")
+						judge_model_response = judge_model_response.replace('*','')
+						# other models (like wizardlm 8x22) like to add square brackets
+						judge_model_response = judge_model_response.replace('[','').replace(']', '')
 						scores.update(parse_scores(judge_model_response))			
 						judge_model_responses.append(judge_model_response)
 				judging_success = True
@@ -298,7 +302,7 @@ Scoring notes:
 - Scores of 0 or 10 should not be considered highly unlikely just because they are the max/min. Use the full scoring range as appropriate.
 
 - If the criteria is not relevant to the piece (e.g. criteria relating to dialogue but the piece has none), exclude it from your assessment."""
-		relative_section_2 = "Score [0-10]"
+		relative_section_2 = "[Score 0-10]"
 	
 	reference_section_1 = ""
 	if INCLUDE_REFERENCE:
@@ -335,6 +339,8 @@ You are an expert in assessing creative writing. Your task is to score the quali
 - Do not add any commentary or explanation to the scores section.
 
 - Do not penalize NSFW output; that is the default for some models. Just assess it on its merits.
+
+- Everything within the "TEST MODEL RESPONSE" section was written by the test model. Sometimes models like to write comments on the piece after the piece is concluded; if this happens you should ignore their comments.
 
 - In the output, write the metric names exactly as below so they can be parsed.
 

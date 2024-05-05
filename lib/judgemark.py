@@ -412,8 +412,7 @@ def compute_judgemark_results(results, run_index, test_model_outputs, verbose):
 	item_scores_by_model = {}
 	print('\nTest model scores:')
 	raw_criteria_scores_by_model = {}
-	for model_name, _ in test_model_outputs.items():
-		# This is a placeholder for wherever you calculate the creative writing score
+	for model_name, _ in test_model_outputs.items():		
 		creative_writing_score, raw_criteria_scores, individual_item_scores = calculate_creative_writing_score_judgemark(run_index, model_name, results)
 		
 		if creative_writing_score is not None:

@@ -352,7 +352,7 @@ def run_generic_benchmark(run_id, model_path, lora_path, prompt_type, quantizati
 			print(f"Iteration {run_iter} of {n_iterations}")
 			run_iter = str(run_iter)
 			try:
-				if benchmark_type != 'judgemark':
+				if benchmark_type != 'judgemark' or judge_params['judge_model_api'] in ['transformers', 'ooba']:
 					model, tokenizer, ooba_instance = load_model_and_launch_ooba(model_path, lora_path, quantization, inference_engine, launch_ooba, ooba_launch_script, ooba_params_global, ooba_params, fast_download, include_patterns, exclude_patterns, hf_access_token, trust_remote_code, cache_dir, verbose, results, run_index, run_iter, questions)
 
 				if model or ooba_instance:
