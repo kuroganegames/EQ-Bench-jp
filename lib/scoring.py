@@ -108,7 +108,7 @@ def calculate_score(reference, user):
 	emotions_dict = {}
 	for emotion, user_emotion_score in user.items():
 		for i in range(1, 5):
-			if emotion == reference[f'emotion{i}']:
+			if emotion.lower() == reference[f'emotion{i}'].lower():
 				emotions_dict[emotion] = True
 	if len(emotions_dict) != 4:
 		print('! Error: emotions did not match reference')
