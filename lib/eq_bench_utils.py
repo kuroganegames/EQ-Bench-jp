@@ -3,7 +3,6 @@ from lib.scoring import calculate_score, calculate_score_fullscale, parse_answer
 from lib.run_bench_helper_functions import remove_revision_instructions
 from lib.run_query import run_query
 
-COMPLETION_TOKENS = 60
 RAW_RESULTS_PATH = './raw_results.json'
 
 def process_question(question_id, q, model_path, prompt_type, model, tokenizer, results, run_index, 
@@ -34,8 +33,15 @@ def process_question(question_id, q, model_path, prompt_type, model, tokenizer, 
 	else:
 		ref_fullscale = None
 
+	COMPLETION_TOKENS = 60
+	if REVISE:
+		COMPLETION_TOKENS = 600
+
 	if eqbench_version == 'v2' and not REVISE:
 		prompt = remove_revision_instructions(prompt, language)
+		
+	
+
 
 	tries = 0
 	success = False

@@ -208,7 +208,6 @@ def run_gemini_query(prompt, history, completion_tokens, temp, model, api_key):
 
 def run_mistral_query(prompt, history, completion_tokens, temp, model, api_key):
 	response = None
-	api_key = api_key
 	try:
 		url = 'https://api.mistral.ai/v1/chat/completions'
 		messages = history + [{"role": "user", "content": prompt}]
