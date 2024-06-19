@@ -171,7 +171,7 @@ def run_anthropic_query(prompt, history, completion_tokens, temp, model, api_key
 			model=model,
 			max_tokens=completion_tokens,
 			temperature=temp,
-			system="You are an expert in emotional analysis.",
+			system="",
 			messages=messages,
 			stream=False
 		)
@@ -453,7 +453,7 @@ def run_query(model_path, prompt_format, prompt, history, completion_tokens, mod
 	 			# then format the pipeline in a messages dict so pipeline knows to apply the 
 	  			# model's encoded chat template.
 				formatted_prompt = [
-					{"role": "system", "content": "You are an expert in emotional intelligence."},
+					#{"role": "system", "content": "You are an expert in emotional intelligence."},
 					{"role": "user", "content": prompt},
 				]
 			else:
