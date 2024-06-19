@@ -5,8 +5,34 @@ import requests
 import json
 import anthropic
 import google.generativeai as genai
+from transformers import StoppingCriteria, StoppingCriteriaList
 anthropic_client = None
 gemini_model = None
+
+class MyStoppingCriteria(StoppingCriteria):
+	def __init__(self, stopping_sequences, tokenizer):
+		self.stopping_sequences = stopping_sequences
+		self.tokenizer = tokenizer
+
+	def __call__(self, input_ids, scores, **kwargs):
+		# Get the generated text as a string
+		generated_text = self.tokenizer.decode(input_ids[0])		
+		# Check if the target sequence appears in the generated text
+		for seq in self.stopping_sequences:
+			if seq in generated_text:
+				return True  # Stop generation
+		return False  # Continue generation
+
+	def __len__(self):
+		return 1
+
+	def __iter__(self):
+		yield self
+
+# Add custom stopping criteria here if required. Only works with run_pipeline_query (which is the default).
+# e.g.
+#STOPPING_CRITERIA = ['assistant\n']
+STOPPING_CRITERIA = []
 
 def run_chat_template_query(prompt, completion_tokens, model, tokenizer, temp):
 	chat = [
@@ -25,7 +51,12 @@ def run_chat_query(prompt, completion_tokens, model, tokenizer, temp):
 	return response
 
 def run_pipeline_query(prompt, completion_tokens, model, tokenizer, temp):
-	text_gen = pipeline(task="text-generation", model=model, tokenizer=tokenizer, do_sample=True, temperature=temp, max_new_tokens=completion_tokens)
+	if STOPPING_CRITERIA:
+		print('Using custom stopping criteria:', STOPPING_CRITERIA)
+		my_stopping_criteria = MyStoppingCriteria(STOPPING_CRITERIA, tokenizer)
+		text_gen = pipeline(task="text-generation", model=model, tokenizer=tokenizer, do_sample=True, temperature=temp, max_new_tokens=completion_tokens, generation_kwargs = {"stopping_criteria": StoppingCriteriaList([my_stopping_criteria])})
+	else:
+		text_gen = pipeline(task="text-generation", model=model, tokenizer=tokenizer, do_sample=True, temperature=temp, max_new_tokens=completion_tokens)
 	output = text_gen(prompt)
 	out_str = output[0]['generated_text']
 	# Trim off the prompt
@@ -33,6 +64,11 @@ def run_pipeline_query(prompt, completion_tokens, model, tokenizer, temp):
 		trimmed_output = out_str[len(prompt):].strip()
 	else:
 		trimmed_output = out_str[-1]['content'].strip()
+	
+	if STOPPING_CRITERIA:
+		for stop_str in STOPPING_CRITERIA:
+			if stop_str in trimmed_output:
+				trimmed_output = trimmed_output.split(stop_str)[0]
 	return trimmed_output
 
 def run_llama3_query(prompt, completion_tokens, model, tokenizer, temp):
@@ -160,7 +196,7 @@ def run_gemini_query(prompt, history, completion_tokens, temp, model, api_key):
 	try:
 		if not gemini_model:
 			genai.configure(api_key=api_key)
-			gemini_model = genai.GenerativeModel('gemini-1.5-pro-latest')
+			gemini_model = genai.GenerativeModel(model)
 
 		safety_settings = [
 			{
@@ -373,7 +409,7 @@ def generate_prompt_from_template(prompt, prompt_type):
 		return prompt
 	template_path = f"instruction-templates/{prompt_type}.yaml"
 	template = parse_yaml(template_path)
-	default_system_message = "You are an expert in emotional analysis."
+#	default_system_message = "You are an expert in emotional analysis."
 	
 	context = template["context"]
 	if '<|system-message|>' in template['context']:
