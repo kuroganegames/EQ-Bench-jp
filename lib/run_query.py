@@ -74,7 +74,7 @@ def run_pipeline_query(prompt, completion_tokens, model, tokenizer, temp):
 def run_llama3_query(prompt, completion_tokens, model, tokenizer, temp):
 	text_gen = pipeline(task="text-generation", model=model, tokenizer=tokenizer, do_sample=True, temperature=temp, max_new_tokens=completion_tokens)
 	messages = [
-		{"role": "system", "content": "You are an expert in emotional intelligence."},
+		{"role": "system", "content": ""},
 		{"role": "user", "content": prompt},
 	]
 	prompt = text_gen.tokenizer.apply_chat_template(
@@ -409,7 +409,7 @@ def generate_prompt_from_template(prompt, prompt_type):
 		return prompt
 	template_path = f"instruction-templates/{prompt_type}.yaml"
 	template = parse_yaml(template_path)
-#	default_system_message = "You are an expert in emotional analysis."
+	default_system_message = ""
 	
 	context = template["context"]
 	if '<|system-message|>' in template['context']:
