@@ -7,8 +7,9 @@ def load_model(base_model_path, lora_path, quantization, trust_remote_code = Fal
 
 	# This is for llama2 models, but doesn't seem to have
 	# adverse effects on benchmarks for other models.
-	tokenizer.pad_token = tokenizer.eos_token
-	tokenizer.padding_side = "right"
+	# ! Update: This appears to be no longer necessary for llama2 models. It causes issues with some models like THUDM/glm-4-9b-chat.
+	#tokenizer.pad_token = tokenizer.eos_token
+	#tokenizer.padding_side = "right"
 
 	# Quantization Config
 	if quantization == '4bit':
