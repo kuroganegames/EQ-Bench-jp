@@ -21,7 +21,7 @@ BENCH_RESULTS_PATH = './benchmark_results.csv'
 
 def setup_benchmark(benchmark_type, run_id, model_path, lora_path, prompt_type, quantization, inference_engine, ooba_params, include_patterns, exclude_patterns, language, judge_params, questions_fn):
 	if benchmark_type == 'eq-bench':
-		with open(questions_fn, 'r') as f:
+		with open(questions_fn, 'r', encoding='utf-8') as f:
 			questions = json.load(f)
 		process_fn = process_question
 		scoring_fn = calculate_eq_bench_score
@@ -30,7 +30,7 @@ def setup_benchmark(benchmark_type, run_id, model_path, lora_path, prompt_type, 
 		run_index = f"{run_id}--{eqbench_version}--{language}--{model_path}--{lora_path}--{prompt_type}--{quantization}--{inference_engine}--{ooba_params}--{format_include_exclude_string(include_patterns, exclude_patterns)}"
 
 	elif benchmark_type == 'creative-writing':
-		with open('data/creative_writing_prompts.json', 'r') as f:
+		with open('data/creative_writing_prompts.json', 'r', encoding='utf-8') as f:
 			questions = json.load(f)
 		process_fn = process_writing_prompt
 		scoring_fn = calculate_creative_writing_score
@@ -39,9 +39,9 @@ def setup_benchmark(benchmark_type, run_id, model_path, lora_path, prompt_type, 
 		eqbench_version = None
 
 	elif benchmark_type == 'judgemark':
-		with open('data/judgemark_test_set.json', 'r') as f:
+		with open('data/judgemark_test_set.json', 'r', encoding='utf-8') as f:
 			test_model_outputs = json.load(f)
-		with open('data/creative_writing_prompts.json', 'r') as f:
+		with open('data/creative_writing_prompts.json', 'r', encoding='utf-8') as f:
 			questions = json.load(f)
 		process_fn = process_writing_prompt
 		scoring_fn = calculate_creative_writing_score
@@ -58,7 +58,7 @@ def setup_benchmark(benchmark_type, run_id, model_path, lora_path, prompt_type, 
 def initialize_results(run_index, benchmark_type, resume, n_iterations, run_id, model_path, lora_path, prompt_type, quantization, inference_engine, ooba_params, include_patterns, exclude_patterns, judge_params, language, eqbench_version):
 	results = {}
 	if resume and os.path.exists(RAW_RESULTS_PATH):
-		with open(RAW_RESULTS_PATH, 'r') as f:
+		with open(RAW_RESULTS_PATH, 'r', encoding='utf-8') as f:
 			results = json.load(f)
 		if benchmark_type == 'eq-bench':
 			results = fix_results(results)
@@ -173,7 +173,7 @@ def process_questions(benchmark_type, model, ooba_instance, inference_engine, re
 												launch_ooba, ooba_request_timeout, openai_client, judge_params,
 												test_model_response, model_name)
 				model_scores.append(scores)
-				with open(RAW_RESULTS_PATH, 'w') as f:
+				with open(RAW_RESULTS_PATH, 'w', encoding='utf-8') as f:
 					json.dump(results, f)
 
 	else:
@@ -193,13 +193,13 @@ def process_questions(benchmark_type, model, ooba_instance, inference_engine, re
 					if scores:
 						if verbose:
 							print(scores)
-						with open(RAW_RESULTS_PATH, 'w') as f:
+						with open(RAW_RESULTS_PATH, 'w', encoding='utf-8') as f:
 							json.dump(results, f)
 
 
 def save_and_upload_results(run_id, formatted_datetime, bench_success, prompt_type, model_path, lora_path, quantization, benchmark_type, lang_suffix, this_score, parseable, n_iterations, inference_engine, ooba_params, include_patterns, exclude_patterns, judge_params, results, run_index, last_error, bench_tries, max_bench_retries, google_spreadsheet_url, save_result_to_db_fn, eqbench_version):
 	if not os.path.exists(BENCH_RESULTS_PATH):
-		with open(BENCH_RESULTS_PATH, 'a') as f:
+		with open(BENCH_RESULTS_PATH, 'a', encoding='utf-8') as f:
 			f.write('Run ID, Benchmark Completed, Prompt Format, Model Path, Lora Path, Quantization, Benchmark Score, Benchmark Version, Num Questions Parseable, Num Iterations, Inference Engine, Ooba Params, Download Filters, Error\n')
 
 	if bench_success:
@@ -220,7 +220,7 @@ def save_and_upload_results(run_id, formatted_datetime, bench_success, prompt_ty
 					format_include_exclude_string(include_patterns, exclude_patterns),
 					''
 			]
-			with open(BENCH_RESULTS_PATH, 'a') as f:
+			with open(BENCH_RESULTS_PATH, 'a', encoding='utf-8') as f:
 					f.write(','.join(map(str, this_result)) + '\n')
 			if google_spreadsheet_url and os.path.exists('./google_creds.json'):
 					upload_results_google_sheets(google_spreadsheet_url, this_result)
@@ -242,7 +242,7 @@ def save_and_upload_results(run_id, formatted_datetime, bench_success, prompt_ty
 						format_include_exclude_string(include_patterns, exclude_patterns),
 						last_error
 			]
-			with open(BENCH_RESULTS_PATH, 'a') as f:
+			with open(BENCH_RESULTS_PATH, 'a', encoding='utf-8') as f:
 						f.write(','.join(map(str, this_result)) + '\n')
 
 		elif benchmark_type == 'judgemark':
@@ -262,7 +262,7 @@ def save_and_upload_results(run_id, formatted_datetime, bench_success, prompt_ty
 						format_include_exclude_string(include_patterns, exclude_patterns),
 						last_error
 			]
-			with open(BENCH_RESULTS_PATH, 'a') as f:
+			with open(BENCH_RESULTS_PATH, 'a', encoding='utf-8') as f:
 						f.write(','.join(map(str, this_result)) + '\n')
 
 	if not bench_success:
@@ -282,7 +282,7 @@ def save_and_upload_results(run_id, formatted_datetime, bench_success, prompt_ty
 			format_include_exclude_string(include_patterns, exclude_patterns),
 			last_error
 		]
-		with open(BENCH_RESULTS_PATH, 'a') as f:
+		with open(BENCH_RESULTS_PATH, 'a', encoding='utf-8') as f:
 			f.write(','.join(map(str, this_result)) + '\n')
 		if google_spreadsheet_url and os.path.exists('./google_creds.json'):
 			upload_results_google_sheets(google_spreadsheet_url, this_result)
@@ -411,7 +411,7 @@ def run_generic_benchmark(run_id, model_path, lora_path, prompt_type, quantizati
 			this_score = scoring_fn(run_index, results, RAW_RESULTS_PATH)  
 			print('Creative Writing Score:', this_score)
 			print('Judge:', judge_params['judge_model'])
-			with open(RAW_RESULTS_PATH, 'w') as f:
+			with open(RAW_RESULTS_PATH, 'w', encoding='utf-8') as f:
 						json.dump(results, f)
 
 		elif benchmark_type == 'judgemark':
@@ -420,7 +420,7 @@ def run_generic_benchmark(run_id, model_path, lora_path, prompt_type, quantizati
 			print('Mean Score:', round(results[run_index]['judgemark_results']['mean_score'], 2))
 			print('Std. Dev.:', round(results[run_index]['judgemark_results']['std_dev'], 2))
 			print('Judgemark Score:', round(results[run_index]['judgemark_results']['extended_metrics']['Judgemark'], 2))
-			with open(RAW_RESULTS_PATH, 'w') as f:
+			with open(RAW_RESULTS_PATH, 'w', encoding='utf-8') as f:
 				json.dump(results, f)
 
 	if not bench_success:
