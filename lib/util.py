@@ -4,6 +4,7 @@ import re
 import os
 import psutil
 import shutil
+import json
 
 QUANT_TYPES = [
 	'8bit',
@@ -11,6 +12,36 @@ QUANT_TYPES = [
 	'none',
 	''
 ]
+
+is_writing = False
+
+def safe_dump(data, file_path, max_retries=3):
+	global is_writing
+	is_writing = True
+	retries = 0
+	
+	while retries < max_retries:
+		try:
+			# Convert the data to a JSON string
+			json_string = json.dumps(data)
+			
+			# Write the string to file in a single operation
+			with open(file_path, 'w', encoding='utf-8') as f:
+					f.write(json_string)
+			
+			# If successful, break the loop
+			break
+		except KeyboardInterrupt:
+			print(f"Dump interrupted. Retrying... (Attempt {retries + 1}/{max_retries})")
+			retries += 1
+		except Exception as e:
+			print(f"Error during dump: {e}. Retrying... (Attempt {retries + 1}/{max_retries})")
+			retries += 1
+	
+	is_writing = False
+	
+	if retries == max_retries:
+		print("Maximum retries reached. Dump may be incomplete.")
 
 def is_int(s):
 	try:

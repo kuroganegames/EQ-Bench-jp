@@ -2,14 +2,22 @@ import argparse
 import configparser
 import os
 import time
-from lib.util import parse_batch, is_int, preprocess_config_string, revert_placeholders_in_config
+from lib.util import parse_batch, is_int, preprocess_config_string, revert_placeholders_in_config, is_writing
 import lib.db
 import signal
 import sys
 import re
 import io
+import atexit
 
 ooba_instance = None
+
+def cleanup():	
+	while is_writing:
+		print('Waiting for writes to complete...')
+		time.sleep(0.1)
+	print('All writes completed. Exiting gracefully.')
+
 
 # Function to handle SIGINT
 def signal_handler(sig, frame):
@@ -17,11 +25,13 @@ def signal_handler(sig, frame):
 	if ooba_instance:
 		print('Stopping ooba...')
 		ooba_instance.stop()
-	# Wait a moment for any writes to finish
+	# Wait a moment for any writes to finish	
 	time.sleep(2)
+	cleanup()
 	sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
+#atexit.register(cleanup)
 
 def str2bool(v):
 	if isinstance(v, bool):

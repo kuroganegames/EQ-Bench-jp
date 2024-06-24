@@ -2,6 +2,7 @@ import json
 from lib.scoring import calculate_score, calculate_score_fullscale, parse_answers, parse_answers_de
 from lib.run_bench_helper_functions import remove_revision_instructions
 from lib.run_query import run_query
+from lib.util import safe_dump
 
 RAW_RESULTS_PATH = './raw_results.json'
 
@@ -141,5 +142,4 @@ def process_question(question_id, q, model_path, prompt_type, model, tokenizer, 
 				results[run_index]['iterations'][run_iter]['individual_scores_fullscale'][question_id] = prev_result_fullscale
 				results[run_index]['iterations'][run_iter]['raw_inference'][question_id] = prev_result_inference
 
-	with open(RAW_RESULTS_PATH, 'w') as f:
-		json.dump(results, f)
+	safe_dump(results, RAW_RESULTS_PATH)

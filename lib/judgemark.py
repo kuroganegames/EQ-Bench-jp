@@ -472,7 +472,7 @@ def compute_judgemark_results(results, run_index, test_model_outputs, verbose):
 	if judge_model in family_bias and family_bias[judge_model] != None:
 		print('Family bias:', round(family_bias[judge_model], 2))
 	else:
-		print('Self bias:', 'N/A')
+		print('Family bias:', 'N/A')
 	
 	print('Avg 95% CI:', avg_ci_range)
 

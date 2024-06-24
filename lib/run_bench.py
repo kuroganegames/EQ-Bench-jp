@@ -6,10 +6,10 @@ import datetime
 from tqdm import tqdm
 from lib.load_model import load_model
 from lib.eq_bench_utils import process_question
-from lib.creative_writing_utils import process_writing_prompt
+from lib.creative_writing_utils_v2 import process_writing_prompt
 from lib.scoring import calculate_eq_bench_score, calculate_creative_writing_score
 from lib.db import save_eq_bench_result_to_db, save_creative_writing_result_to_db, save_judgemark_result_to_db
-from lib.util import upload_results_google_sheets, delete_symlinks_and_dir
+from lib.util import upload_results_google_sheets, delete_symlinks_and_dir, safe_dump
 from lib.run_bench_helper_functions import format_include_exclude_string, fix_results, validate_and_extract_vars, run_test_prompts, remove_revision_instructions
 from lib.judgemark import compute_judgemark_results
 import lib.ooba
@@ -30,7 +30,7 @@ def setup_benchmark(benchmark_type, run_id, model_path, lora_path, prompt_type, 
 		run_index = f"{run_id}--{eqbench_version}--{language}--{model_path}--{lora_path}--{prompt_type}--{quantization}--{inference_engine}--{ooba_params}--{format_include_exclude_string(include_patterns, exclude_patterns)}"
 
 	elif benchmark_type == 'creative-writing':
-		with open('data/creative_writing_prompts.json', 'r', encoding='utf-8') as f:
+		with open('data/creative_writing_prompts_v2.json', 'r', encoding='utf-8') as f:
 			questions = json.load(f)
 		process_fn = process_writing_prompt
 		scoring_fn = calculate_creative_writing_score
@@ -173,8 +173,7 @@ def process_questions(benchmark_type, model, ooba_instance, inference_engine, re
 												launch_ooba, ooba_request_timeout, openai_client, judge_params,
 												test_model_response, model_name)
 				model_scores.append(scores)
-				with open(RAW_RESULTS_PATH, 'w', encoding='utf-8') as f:
-					json.dump(results, f)
+				safe_dump(results, RAW_RESULTS_PATH)
 
 	else:
 		for question_id, q in tqdm(questions.items()):			
@@ -193,8 +192,7 @@ def process_questions(benchmark_type, model, ooba_instance, inference_engine, re
 					if scores:
 						if verbose:
 							print(scores)
-						with open(RAW_RESULTS_PATH, 'w', encoding='utf-8') as f:
-							json.dump(results, f)
+						safe_dump(results, RAW_RESULTS_PATH)
 
 
 def save_and_upload_results(run_id, formatted_datetime, bench_success, prompt_type, model_path, lora_path, quantization, benchmark_type, lang_suffix, this_score, parseable, n_iterations, inference_engine, ooba_params, include_patterns, exclude_patterns, judge_params, results, run_index, last_error, bench_tries, max_bench_retries, google_spreadsheet_url, save_result_to_db_fn, eqbench_version):
@@ -411,8 +409,7 @@ def run_generic_benchmark(run_id, model_path, lora_path, prompt_type, quantizati
 			this_score = scoring_fn(run_index, results, RAW_RESULTS_PATH)  
 			print('Creative Writing Score:', this_score)
 			print('Judge:', judge_params['judge_model'])
-			with open(RAW_RESULTS_PATH, 'w', encoding='utf-8') as f:
-						json.dump(results, f)
+			safe_dump(results, RAW_RESULTS_PATH)
 
 		elif benchmark_type == 'judgemark':
 			print('Judge:', judge_params['judge_model'])
@@ -420,8 +417,7 @@ def run_generic_benchmark(run_id, model_path, lora_path, prompt_type, quantizati
 			print('Mean Score:', round(results[run_index]['judgemark_results']['mean_score'], 2))
 			print('Std. Dev.:', round(results[run_index]['judgemark_results']['std_dev'], 2))
 			print('Judgemark Score:', round(results[run_index]['judgemark_results']['extended_metrics']['Judgemark'], 2))
-			with open(RAW_RESULTS_PATH, 'w', encoding='utf-8') as f:
-				json.dump(results, f)
+			safe_dump(results, RAW_RESULTS_PATH)
 
 	if not bench_success:
 		print(f"! {benchmark_type} Benchmark Failed")

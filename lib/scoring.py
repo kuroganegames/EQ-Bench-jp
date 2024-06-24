@@ -1,6 +1,7 @@
 import re
 import json
 import math
+from lib.util import is_writing
 
 # Parse the emotion intensity ratings from the raw inference text
 def parse_answers(text, REVISE):
@@ -214,8 +215,10 @@ def calculate_eq_bench_score(run_index, results, results_path, fullscale=False):
 	else:
 		averaged_score = round(averaged_score, 2)
 
+	is_writing['is_writing'] = True
 	with open(results_path, 'w') as f:
 		json.dump(results, f)
+	is_writing['is_writing'] = False
 
 	return (averaged_score, round(parseable_tally / n_iterations, 2))
 

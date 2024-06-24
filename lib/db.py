@@ -100,6 +100,7 @@ def save_creative_writing_result_to_db(results, score, parseable, last_error, ru
 			'run_completed': int(time.time()),
 			'benchmark_success': bench_success,
 			'benchmark_type': 'creative-writing',
+			'benchmark_version': 2.0,
 			'benchmark_score': score,
 			'model_path': meta['model_path'],
 			'lora_path': meta['lora_path'],
