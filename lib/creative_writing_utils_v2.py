@@ -98,8 +98,12 @@ def process_writing_prompt(prompt_id, prompt_data, model_path, prompt_type, mode
 			if test_model_output != None: # these are pregenerated if we are running judgemark
 				test_model_response = test_model_output
 				test_generation_success = True # automatic success!
-			else:		
-				temp = 0.7
+			else:
+				if (inference_engine in ['transformers', 'ooba']):
+					# transformers & ooba use min_p sampler so temp is set higher
+					temp = 1.0
+				else:
+					temp = 0.7
 				tries = 0		
 				while not test_generation_success and tries <= 3:
 					tries += 1
@@ -112,8 +116,12 @@ def process_writing_prompt(prompt_id, prompt_data, model_path, prompt_type, mode
 
 					if not test_model_response or len(test_model_response) < 300:				
 						temp += 0.1
-						if temp > 1:
-							temp = 1
+						if (inference_engine in ['transformers', 'ooba']):
+							if temp > 1.5:
+								temp = 1.5
+						else:
+							if temp > 1:
+								temp = 1
 						print(test_model_response)
 						print('! Missing or too short output from test model')
 						if tries <= 5:

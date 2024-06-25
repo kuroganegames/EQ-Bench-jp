@@ -40,23 +40,23 @@ def run_chat_template_query(prompt, completion_tokens, model, tokenizer, temp):
 	]
 	prompt = tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)
 	inputs = tokenizer.encode(prompt, add_special_tokens=True, return_tensors="pt")
-	outputs = model.generate(input_ids=inputs.to(model.device), max_new_tokens=completion_tokens, temperature=temp, do_sample=True)
+	outputs = model.generate(input_ids=inputs.to(model.device), max_new_tokens=completion_tokens, temperature=temp, do_sample=True, min_p=0.1)
 	output = tokenizer.decode(outputs[0], skip_special_tokens=True)
 	# Trim off the prompt
 	trimmed_output = output[len(prompt):].strip()	
 	return trimmed_output
 
 def run_chat_query(prompt, completion_tokens, model, tokenizer, temp):
-	response, history = model.chat(tokenizer, prompt, history=None, max_new_tokens=completion_tokens, do_sample=True)
+	response, history = model.chat(tokenizer, prompt, history=None, max_new_tokens=completion_tokens, do_sample=True, min_p=0.1)
 	return response
 
 def run_pipeline_query(prompt, completion_tokens, model, tokenizer, temp):
 	if STOPPING_CRITERIA:
 		print('Using custom stopping criteria:', STOPPING_CRITERIA)
 		my_stopping_criteria = MyStoppingCriteria(STOPPING_CRITERIA, tokenizer)
-		text_gen = pipeline(task="text-generation", model=model, tokenizer=tokenizer, do_sample=True, temperature=temp, max_new_tokens=completion_tokens, generation_kwargs = {"stopping_criteria": StoppingCriteriaList([my_stopping_criteria])})
+		text_gen = pipeline(task="text-generation", model=model, tokenizer=tokenizer, do_sample=True, temperature=temp, max_new_tokens=completion_tokens, generation_kwargs = {"stopping_criteria": StoppingCriteriaList([my_stopping_criteria])}, min_p=0.1)
 	else:
-		text_gen = pipeline(task="text-generation", model=model, tokenizer=tokenizer, do_sample=True, temperature=temp, max_new_tokens=completion_tokens)
+		text_gen = pipeline(task="text-generation", model=model, tokenizer=tokenizer, do_sample=True, temperature=temp, max_new_tokens=completion_tokens, min_p=0.1)
 	output = text_gen(prompt)
 	out_str = output[0]['generated_text']
 	# Trim off the prompt
@@ -72,7 +72,7 @@ def run_pipeline_query(prompt, completion_tokens, model, tokenizer, temp):
 	return trimmed_output
 
 def run_llama3_query(prompt, completion_tokens, model, tokenizer, temp):
-	text_gen = pipeline(task="text-generation", model=model, tokenizer=tokenizer, do_sample=True, temperature=temp, max_new_tokens=completion_tokens)
+	text_gen = pipeline(task="text-generation", model=model, tokenizer=tokenizer, do_sample=True, temperature=temp, max_new_tokens=completion_tokens, min_p=0.1)
 	messages = [
 		{"role": "system", "content": ""},
 		{"role": "user", "content": prompt},
@@ -102,7 +102,7 @@ def run_llama3_query(prompt, completion_tokens, model, tokenizer, temp):
 
 def run_generate_query(prompt, completion_tokens, model, tokenizer, temp):
 	inputs = tokenizer(prompt, return_tensors="pt")
-	outputs = model.generate(inputs.input_ids, max_new_tokens=completion_tokens, do_sample=True, temperature=temp)
+	outputs = model.generate(inputs.input_ids, max_new_tokens=completion_tokens, do_sample=True, temperature=temp, min_p=0.1)
 	output = tokenizer.decode(outputs[0], skip_special_tokens=True)
 	# Trim off the prompt
 	trimmed_output = output[len(prompt):].strip()
@@ -299,6 +299,7 @@ def run_ooba_query(prompt, history, prompt_format, completion_tokens, temp, ooba
 		  	"instruction_template": prompt_format,
 		  	"max_tokens": completion_tokens,
     		"temperature": temp,
+			"min_p": 0.1,
 			"user_bio": "", # workaround for ooba bug
 		}
 
