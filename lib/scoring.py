@@ -224,25 +224,14 @@ def calculate_eq_bench_score(run_index, results, results_path, fullscale=False):
 
 
 neg_criteria = [
-				"melodramatic",
-				"shallow resolution",
-				"unearned resolution",  # old naming
-				"simplistic moralizing",
-				"shallow optimism",
-				"forced optimism", # old naming
-				"trite",
-				"overwrought",
-				"amateurish",
-				"contrived",
-				"uninspiring",
-				"characters are too good",
-				"incongruent ending positivity",
-				"unearned transformations",
-				"profundity over-reach",
-				"amateurish descriptives",
-				"clunky asides and interruptive sentence structures",
-				"stilted dialogue",
-				"tit-for-tat dialogue"
+					"melodramatic", "shallow resolution", "unearned resolution",
+					"simplistic moralizing", "shallow optimism", "forced optimism",
+					"trite", "overwrought", "amateurish", "contrived", "uninspiring",
+					"characters are too good", "incongruent ending positivity",
+					"unearned transformations", "profundity over-reach", "amateurish descriptives",
+					"clunky asides and interruptive sentence structures", "stilted dialogue",
+					"tit-for-tat dialogue", "purple prose", "unsurprising or uncreative", "tell-don't-show",
+					"weak dialogue", "meandering"
 			]
 
 def calculate_creative_writing_score(run_index, results, results_path):

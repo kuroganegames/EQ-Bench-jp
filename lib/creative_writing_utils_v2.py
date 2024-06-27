@@ -15,8 +15,8 @@ if RELATIVE_SCORING:
 	INCLUDE_REFERENCE = True
 TEST_MODEL_SEES_CRITERIA = False # Is the test model shown the scoring criteria? (default False) ! This seems to produce worse results
 
-CRITERIA_TO_IGNORE = [
-]
+CRITERIA_TO_IGNORE = []
+INCLUDE_NEGATIVE_CRITERIA = True
 
 
 def process_criteria(criteria_set, writing_prompt, reference_output, test_model_response, verbose, judge_params, judge_temp):
@@ -221,26 +221,15 @@ def print_score(scores, RELATIVE_SCORING=False):
 		return
 	scoresum = 0
 	neg_criteria = [
-		"melodramatic",
-		"shallow resolution",
-		"unearned resolution",  # old naming
-		"simplistic moralizing",
-		"shallow optimism",
-		"forced optimism",  # old naming
-		"trite",
-		"overwrought",
-		"amateurish",
-		"contrived",
-		"uninspiring",
-		"characters are too good",
-		"incongruent ending positivity",
-		"unearned transformations",
-		"profundity over-reach",
-		"amateurish descriptives",
-		"clunky asides and interruptive sentence structures",
-		"stilted dialogue",
-		"tit-for-tat dialogue"
-	]
+					"melodramatic", "shallow resolution", "unearned resolution",
+					"simplistic moralizing", "shallow optimism", "forced optimism",
+					"trite", "overwrought", "amateurish", "contrived", "uninspiring",
+					"characters are too good", "incongruent ending positivity",
+					"unearned transformations", "profundity over-reach", "amateurish descriptives",
+					"clunky asides and interruptive sentence structures", "stilted dialogue",
+					"tit-for-tat dialogue", "purple prose", "unsurprising or uncreative", "tell-don't-show",
+					"weak dialogue", "meandering"
+			]
 	for criteria, score in scores.items():
 		criteria_lower = criteria.lower().strip()
 		if RELATIVE_SCORING:
@@ -261,6 +250,20 @@ def create_judging_prompt(criteria_set, writing_prompt, reference_output, test_m
 
 	prefix_text = criteria_set['prefix_text']
 	criteria_str = '\n'.join(criteria)
+
+	if (INCLUDE_NEGATIVE_CRITERIA):
+		negative_criteria_section = """
+- For these criteria, lower is better:
+Unearned Transformations
+Incongruent Ending Positivity
+Overwrought
+Purple Prose
+Amateurish
+Unsurprising or Uncreative
+Tell-Don't-Show
+Weak Dialogue
+Meandering
+"""
 
 	analysis_section_1 = """
 - You are to write a comprehensive analysis of the piece, then give your scores.
@@ -317,7 +320,6 @@ Scoring notes:
 """
 
 
-
 		# Construct judging prompt
 		judging_prompt = f"""
 You are an expert in assessing creative writing. Your task is to score the quality of the test model's response below, by several metrics, on a 0-10 scale.
@@ -353,7 +355,7 @@ You are an expert in assessing creative writing. Your task is to score the quali
 - Do not use markdown in your response. Use the designated output format exactly.
 
 - Some models have a positivity bias that produces worse writing. You'll know it when you see it (particularly with unearned positive resolutions).
-
+{negative_criteria_section}
 - You are a critic, so be honest, objective, critical and discriminative. No need to be charitable; say what you genuinely think.
 {analysis_section_1}
 - Output format is:
@@ -395,4 +397,17 @@ Stilted Dialogue
 Clunky Asides and Interruptive Sentence Structures
 Amateurish Descriptives
 Profundity Over-reach
+"""
+
+"""
+- For these criteria, lower is better:
+Unearned Transformations
+Incongruent Ending Positivity
+Overwrought
+Purple Prose
+Amateurish
+Unsurprising or Uncreative
+Tell-Don't-Show
+Weak Dialogue
+Meandering
 """

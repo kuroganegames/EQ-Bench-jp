@@ -30,7 +30,7 @@ def setup_benchmark(benchmark_type, run_id, model_path, lora_path, prompt_type, 
 		run_index = f"{run_id}--{eqbench_version}--{language}--{model_path}--{lora_path}--{prompt_type}--{quantization}--{inference_engine}--{ooba_params}--{format_include_exclude_string(include_patterns, exclude_patterns)}"
 
 	elif benchmark_type == 'creative-writing':
-		with open('data/creative_writing_prompts_v2.json', 'r', encoding='utf-8') as f:
+		with open('data/creative_writing_prompts_v2.2.json', 'r', encoding='utf-8') as f:
 			questions = json.load(f)
 		process_fn = process_writing_prompt
 		scoring_fn = calculate_creative_writing_score

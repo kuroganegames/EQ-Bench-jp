@@ -13,7 +13,7 @@
 		 "Focus on the gladiator's thoughts and emotions during a moment of solitude.",
 		 "Use a mix of short, punchy sentences and longer, more descriptive ones to create a dynamic pace."
 	  ],
-	  "judging_criteria": [
+	  "judging_criteria": [		
 		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
@@ -24,10 +24,24 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -81,6 +95,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -94,7 +122,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -138,6 +166,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -151,7 +193,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -195,6 +237,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -208,7 +264,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -252,6 +308,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -265,7 +335,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -309,6 +379,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -322,7 +406,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -366,6 +450,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -379,7 +477,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -423,6 +521,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -436,7 +548,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -480,6 +592,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -493,7 +619,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -537,6 +663,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -550,7 +690,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -594,6 +734,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -607,7 +761,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -651,6 +805,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -664,7 +832,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -708,6 +876,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -721,7 +903,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -765,6 +947,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -778,7 +974,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -822,6 +1018,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -835,7 +1045,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -879,6 +1089,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -892,7 +1116,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -936,6 +1160,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -949,7 +1187,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -993,6 +1231,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -1006,7 +1258,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -1050,6 +1302,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -1063,7 +1329,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -1107,6 +1373,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -1120,7 +1400,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -1164,6 +1444,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -1177,7 +1471,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -1222,6 +1516,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -1235,7 +1543,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -1279,6 +1587,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -1292,7 +1614,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
@@ -1336,6 +1658,20 @@
 			]
 		 },
 		 {
+			"prefix_text": "Now, rate the supplied model output on the following criteria (lower = better):",
+			"criteria": [				
+				"Unearned Transformations",
+				"Incongruent Ending Positivity",
+				"Overwrought",
+				"Purple Prose",
+				"Amateurish",
+				"Unsurprising or Uncreative",
+				"Tell-Don't-Show",
+				"Weak Dialogue",
+				"Meandering"
+			]
+		},
+		 {
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Coherent",
@@ -1349,7 +1685,7 @@
 			"prefix_text": "Now, rate the supplied model output on the following criteria:",
 			"criteria": [
 			  "Consistent Voice/Tone of Writing",
-			  "Believable Characters",
+			  "Nuanced Characters",
 			  "Believable Character Actions",
 			  "Adherence to Instructions"
 			  			]
