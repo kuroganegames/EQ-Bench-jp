@@ -263,7 +263,7 @@ def create_judging_prompt(criteria_set, writing_prompt, reference_output, test_m
 	criteria_str = '\n'.join(criteria)
 
 	analysis_section_1 = """
-- You are to write a comprehensive analysis for each of the metrics, then give your scores.
+- You are to write a comprehensive analysis of the piece, then give your scores.
 """
 	analysis_section_2 = """
 [Analysis]
