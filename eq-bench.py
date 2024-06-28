@@ -6,9 +6,9 @@ from lib.util import parse_batch, is_int, preprocess_config_string, revert_place
 import lib.db
 import signal
 import sys
-import re
 import io
-import atexit
+import gc
+import torch
 
 ooba_instance = None
 
@@ -31,7 +31,6 @@ def signal_handler(sig, frame):
 	sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
-#atexit.register(cleanup)
 
 def str2bool(v):
 	if isinstance(v, bool):
@@ -252,6 +251,11 @@ def main():
 				except Exception as e:
 					pass
 			raise
+
+		gc.collect()
+		gc.collect()
+
+		torch.cuda.empty_cache()
 
 		models_remaining = models_remaining[1:]
 
