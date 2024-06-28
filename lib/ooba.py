@@ -221,5 +221,7 @@ class Ooba:
 		except Exception:
 			self.process.kill()
 		self.process_end_event.set()
+		# Wait a bit for ooba to exit
+		time.sleep(5)
 		return
 
