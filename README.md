@@ -264,7 +264,7 @@ Note: Ooobabooga is optional. If you prefer to use transformers as the inference
 ## Running the benchmark
 
 - Run the benchmark:
-   - `python3 eq-bench.py`
+   - `python3 eq-bench.py --benchmarks <eq-bench|creative-writing|judgemark>`
 - Results are saved to `benchmark_results.csv`
 
 ## Script Options
@@ -278,6 +278,7 @@ Note: Ooobabooga is optional. If you prefer to use transformers as the inference
 - `-l`: Sets the language: `en` and `de` currently supported. Defaults to English if not specified.
 - `-v1`: Runs v1 of the benchmark (legacy). If not set, the benchmark defaults to v2.
 - `-revise`: Enables the revision component of the test questions (this is off by default since v2.1).
+- `--benchmarks`: Specify the benchmarks to run (separate by comma): &lt;eq-bench|creative-writing|judgemark&gt;
 
 ## Prompt Formats / Instruction Templates
 
