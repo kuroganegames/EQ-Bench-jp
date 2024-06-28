@@ -2,13 +2,12 @@ import argparse
 import configparser
 import os
 import time
-from lib.util import parse_batch, is_int, preprocess_config_string, revert_placeholders_in_config, is_writing
+from lib.util import parse_batch, is_int, preprocess_config_string, revert_placeholders_in_config, is_writing, gpu_cleanup
 import lib.db
 import signal
 import sys
 import io
-import gc
-import torch
+
 
 ooba_instance = None
 
@@ -250,12 +249,12 @@ def main():
 					ooba_instance.stop()
 				except Exception as e:
 					pass
+			gpu_cleanup()
 			raise
+		except Exception as e:
+			gpu_cleanup()
 
-		gc.collect()
-		gc.collect()
-
-		torch.cuda.empty_cache()
+		gpu_cleanup()
 
 		models_remaining = models_remaining[1:]
 

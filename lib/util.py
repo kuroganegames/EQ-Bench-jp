@@ -5,6 +5,10 @@ import os
 import psutil
 import shutil
 import json
+import gc
+import torch
+import sys
+import time
 
 QUANT_TYPES = [
 	'8bit',
@@ -280,3 +284,26 @@ def revert_placeholders_in_config(benchmark_runs):
 		line = line.replace('<_COLON_>', ':')
 		processed_lines.append(line)
 	return processed_lines
+
+def gpu_cleanup():
+	gc.collect()
+	torch.cuda.empty_cache()
+
+	# Unload all loaded modules
+	for module in list(sys.modules.keys()):
+		if module.startswith('transformers'):
+			del sys.modules[module]
+
+	# Clear CUDA memory
+	if torch.cuda.is_available():
+		torch.cuda.synchronize()
+		torch.cuda.empty_cache()
+		torch.cuda.reset_peak_memory_stats()
+
+	# Reset the CUDA device
+	if torch.cuda.is_available():
+		current_device = torch.cuda.current_device()
+		torch.cuda.device(current_device).empty_cache()
+		torch.cuda.ipc_collect()
+
+	time.sleep(5)
