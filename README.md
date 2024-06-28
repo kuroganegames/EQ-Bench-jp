@@ -21,10 +21,9 @@ We've released v2 of the creative writing benchmark & leaderboard. The old versi
 - Removed some prompts and added new ones; 24 in total now.
 - Reworked the scoring criteria
 - Criteria now are weighted (to increase discriminative power)
-- Inference settings are noted in sample.txt
 - Leaderboard models are now tested for 10 iterations
 - Leaderboard now shows error bars for 95% confidence interval
-- Sample link on leaderboard now show scores for all iterations, as well as inference settings
+- Sample txt on leaderboard now show scores for all iterations, as well as inference settings
 
 <details>
 <summary>### 2024-04-19 Minor updates</summary>
