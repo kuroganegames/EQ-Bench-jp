@@ -8,13 +8,36 @@ The latest leaderboard can be viewed at [EQ-Bench Leaderboard](https://eqbench.c
 
 ## News
 
-### 2024-04-19 Minor updates
+### Creative Writing v2
+
+2024-06-29 (v2.4 of the benchmark pipeline)
+
+We've released v2 of the creative writing benchmark & leaderboard. The old version was starting to saturate (scores bunching at the top), so we removed some of the less discriminative prompts, switched judge models, and made some other improvements besides.
+
+**Creative Writing v2 Changes**
+
+- Default min_p = 0.1, temp = 1 for transformers & oobabooga inference
+- Change to Claude 3.5 Sonnet as judge (from Claude 3 Opus)
+- Removed some prompts and added new ones; 24 in total now.
+- Reworked the scoring criteria
+- Criteria now are weighted (to increase discriminative power)
+- Inference settings are noted in sample.txt
+- Leaderboard models are now tested for 10 iterations
+- Leaderboard now shows error bars for 95% confidence interval
+- Sample link on leaderboard now show scores for all iterations, as well as inference settings
+
+<details>
+<summary>### 2024-04-19 Minor updates</summary>
+
 
 - Changed behaviour when using Transformers and no chat template is specified. In this scenario, the benchmark will now apply the tokenizer's chat template if there is one.
 - Models are now loaded in 16 bit precision if "none" quantisation is selected.
 - Preliminary support for Llama3 models (adding <|eot_id|> to the tokenizer).
 
-### Version 2.3
+</details>
+
+<details>
+<summary>### Version 2.3</summary>
 
 This version includes two new benchmarks: `creative-writing` and `judgemark`.
 
@@ -53,6 +76,8 @@ Given the small number of questions in the test set, you may wish to run several
 Temperature is set at 0.7 for the test model inference, so output will vary between iterations.
 
 [For more details, click here.](https://eqbench.com/about.html)
+
+</details>
 
 <details>
 <summary>### Version 2.2 Released</summary>
