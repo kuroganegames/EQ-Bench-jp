@@ -303,7 +303,10 @@ def gpu_cleanup():
 	# Reset the CUDA device
 	if torch.cuda.is_available():
 		current_device = torch.cuda.current_device()
-		torch.cuda.device(current_device).empty_cache()
+		try:
+			torch.cuda.device(current_device).empty_cache()
+		except Exception as e:
+			pass
 		torch.cuda.ipc_collect()
 
 	time.sleep(5)
