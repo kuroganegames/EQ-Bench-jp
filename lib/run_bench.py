@@ -346,13 +346,12 @@ def run_generic_benchmark(run_id, model_path, lora_path, prompt_type, quantizati
 
 	start_time = time.time()
 	while not bench_success and bench_tries <= max_bench_retries:
-		for run_iter in range(1, n_iterations+1):
+		for run_iter in range(1, n_iterations+1):			
 			print(f"Iteration {run_iter} of {n_iterations}")
 			run_iter = str(run_iter)
 			try:
 				if benchmark_type != 'judgemark' or judge_params['judge_model_api'] in ['transformers', 'ooba']:
 					model, tokenizer, ooba_instance = load_model_and_launch_ooba(model_path, lora_path, quantization, inference_engine, launch_ooba, ooba_launch_script, ooba_params_global, ooba_params, fast_download, include_patterns, exclude_patterns, hf_access_token, trust_remote_code, cache_dir, verbose, results, run_index, run_iter, questions)
-
 				if model or ooba_instance:
 					run_test_prompts(model, ooba_instance,
 													inference_engine, results,
@@ -368,6 +367,11 @@ def run_generic_benchmark(run_id, model_path, lora_path, prompt_type, quantizati
 					compute_judgemark_results(results, run_index, test_model_outputs, verbose)
 
 				bench_success = True
+				try:
+					if ooba_instance:
+						ooba_instance.stop()
+				except Exception as e:
+					pass
 			except Exception as e:  
 						print(e)
 						last_error = ' '.join(str(e).split('\n')) 

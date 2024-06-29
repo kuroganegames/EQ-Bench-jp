@@ -254,6 +254,12 @@ def main():
 		except Exception as e:
 			gpu_cleanup()
 
+		if inference_engine == 'ooba' and launch_ooba:
+			try:
+				ooba_instance.stop()
+			except Exception as e:
+				pass
+
 		gpu_cleanup()
 
 		models_remaining = models_remaining[1:]
