@@ -53,7 +53,7 @@ def main():
 	parser.add_argument('-v1', action='store_true', help="Run v1 of EQ-Bench (legacy). V1 has been superseded and results are not directly comparable to v2 results.")
 	parser.add_argument('-revise', action='store_true', help="Include the revision component of the test (off by default since v2.1).")
 	parser.add_argument('--benchmarks', nargs='+', default=['eq-bench'],
-                        help="Specify the benchmark types to run (eq-bench, creative-writing, or both)")
+                        help="Specify the benchmark types to run <eq-bench|creative-writing|judgemark> separated by comma.")
 	parser.add_argument('-w', action='store_true',
 							help="Overwrites existing results (i.e. disables the default behaviour of resuming a partially completed run).")
 	parser.add_argument('-d', action='store_true',
@@ -249,11 +249,12 @@ def main():
 			gpu_cleanup()
 			raise
 		except Exception as e:
+			print(e)
 			gpu_cleanup()
 
 		if ooba_instance:
 			ooba_instance.stop()
-		gpu_cleanup()
+			gpu_cleanup()
 
 		models_remaining = models_remaining[1:]
 

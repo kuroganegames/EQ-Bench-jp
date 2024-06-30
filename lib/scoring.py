@@ -158,9 +158,12 @@ def calculate_eq_bench_score(run_index, results, results_path, fullscale=False):
 
 	score_tally = 0	
 	parseable_tally = 0
-	n_iterations = len(results[run_index]['iterations'])
+	n_iterations = results[run_index]['run_metadata']['total_iterations']
+	n_iterations_tallied = 0
 
-	for run_iter in results[run_index]['iterations']:
+	for run_iter in results[run_index]['iterations']:		
+		if n_iterations_tallied >= n_iterations:
+			break
 		score_sum_first_pass = 0
 		score_sum_revised = 0
 		first_pass_parseable = 0
@@ -213,6 +216,8 @@ def calculate_eq_bench_score(run_index, results, results_path, fullscale=False):
 			'final_score': final_score,
 			'final_parseable': final_parseable
 		}
+
+		n_iterations_tallied += 1
 
 	averaged_score = score_tally / n_iterations
 

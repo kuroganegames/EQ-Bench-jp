@@ -96,6 +96,9 @@ def initialize_results(run_index, benchmark_type, resume, n_iterations, run_id, 
 			results[run_index]['run_metadata'].update({
 					'judge_model': judge_params['judge_model']
 			})
+	else:
+		# run_iterations isn't stored in the run_index string, so need to update it
+		results[run_index]['run_metadata']['total_iterations'] = n_iterations
 
 	return results
 
@@ -371,8 +374,9 @@ def run_generic_benchmark(run_id, model_path, lora_path, prompt_type, quantizati
 				# Cleanup gpu mem as we are loading the model again each iteration
 				if ooba_instance:
 					ooba_instance.stop()
-				del model
-				gpu_cleanup()
+				if model:
+					model = None
+					gpu_cleanup()					
 
 			except Exception as e:  
 						print(e)
@@ -399,17 +403,19 @@ def run_generic_benchmark(run_id, model_path, lora_path, prompt_type, quantizati
 
 		if benchmark_type == 'eq-bench': 
 			if language != 'en':
-						lang_suffix = '_' + language
+				lang_suffix = '_' + language
+			print(eqbench_version)
 			if eqbench_version == 'v1':
-						this_score, parseable = scoring_fn(run_index, results, RAW_RESULTS_PATH, fullscale=False)
-						print(f"Score (v1{lang_suffix}):", this_score)  
+				this_score, parseable = scoring_fn(run_index, results, RAW_RESULTS_PATH, fullscale=False)
+				print(f"Score (v1{lang_suffix}):", this_score)  
 			else:
-						this_score, parseable = scoring_fn(run_index, results, RAW_RESULTS_PATH, fullscale=True)
-						print(f"Score (v2{lang_suffix}):", this_score)
+				
+				this_score, parseable = scoring_fn(run_index, results, RAW_RESULTS_PATH, fullscale=True)
+				print(f"Score (v2{lang_suffix}):", this_score)
 			print('Parseable:', parseable)
 			if parseable / len(questions) < 0.8333:
-						bench_success = False
-						last_error = str(parseable) + ' questions were parseable (min is 83%)'
+				bench_success = False
+				last_error = str(parseable) + ' questions were parseable (min is 83%)'
 
 		elif benchmark_type == 'creative-writing':
 			this_score = scoring_fn(run_index, results, RAW_RESULTS_PATH)  
