@@ -244,22 +244,15 @@ def main():
 								questions_fn=questions_fn, openai_client=openai_client, language=language,
 								REVISE=REVISE, benchmark_types=args.benchmarks, judge_params = judge_params)
 		except KeyboardInterrupt:
-			if inference_engine == 'ooba' and launch_ooba:
-				try:
-					ooba_instance.stop()
-				except Exception as e:
-					pass
+			if ooba_instance:
+				ooba_instance.stop()
 			gpu_cleanup()
 			raise
 		except Exception as e:
 			gpu_cleanup()
 
-		if inference_engine == 'ooba' and launch_ooba:
-			try:
-				ooba_instance.stop()
-			except Exception as e:
-				pass
-
+		if ooba_instance:
+			ooba_instance.stop()
 		gpu_cleanup()
 
 		models_remaining = models_remaining[1:]

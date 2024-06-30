@@ -9,7 +9,7 @@ from lib.eq_bench_utils import process_question
 from lib.creative_writing_utils_v2 import process_writing_prompt
 from lib.scoring import calculate_eq_bench_score, calculate_creative_writing_score
 from lib.db import save_eq_bench_result_to_db, save_creative_writing_result_to_db, save_judgemark_result_to_db
-from lib.util import upload_results_google_sheets, delete_symlinks_and_dir, safe_dump
+from lib.util import upload_results_google_sheets, delete_symlinks_and_dir, safe_dump, gpu_cleanup
 from lib.run_bench_helper_functions import format_include_exclude_string, fix_results, validate_and_extract_vars, run_test_prompts, remove_revision_instructions
 from lib.judgemark import compute_judgemark_results
 import lib.ooba
@@ -367,11 +367,13 @@ def run_generic_benchmark(run_id, model_path, lora_path, prompt_type, quantizati
 					compute_judgemark_results(results, run_index, test_model_outputs, verbose)
 
 				bench_success = True
-				try:
-					if ooba_instance:
-						ooba_instance.stop()
-				except Exception as e:
-					pass
+
+				# Cleanup gpu mem as we are loading the model again each iteration
+				if ooba_instance:
+					ooba_instance.stop()
+				del model
+				gpu_cleanup()
+
 			except Exception as e:  
 						print(e)
 						last_error = ' '.join(str(e).split('\n')) 

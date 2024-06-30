@@ -215,7 +215,10 @@ class Ooba:
 		return start_result
 	
 	def stop(self, force_exit=False, timeout=5):
-		self.process.terminate()
+		try:
+			self.process.terminate()
+		except Exception:
+			pass
 		try:
 			self.process.wait(timeout)
 		except Exception:
