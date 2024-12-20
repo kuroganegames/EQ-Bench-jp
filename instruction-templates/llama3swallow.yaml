@@ -1,0 +1,4 @@
+user: "user"
+bot: "assistant"
+turn_template: "<|start_header_id|><|user|><|end_header_id|>\n\n<|user-message|><|eot_id|><|start_header_id|><|bot|><|end_header_id|>\n\n<|bot-message|><|eot_id|>"
+context: "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n<|system-message|><|eot_id|>"

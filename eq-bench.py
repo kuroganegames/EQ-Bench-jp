@@ -96,7 +96,7 @@ def main():
 	if args.l:  # If language is provided via command line argument
 		language = args.l.strip()
 	
-	if language not in ['en', 'de', 'ja']:
+	if language not in ['en', 'de', 'ja', 'jahalf']:
 		raise Exception('Invalid language value specified.')
 	
 	questions_fn = './data/eq_bench_v2_questions_171.json'
