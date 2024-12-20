@@ -59,6 +59,42 @@ def parse_answers_de(text, REVISE):
 
 	return first_pass_answers, revised_answers
 
+# we parse answers in German language ("ja")
+def parse_answers_ja(text, REVISE):
+    # 1. テキスト中の不要なMarkdown記号や装飾を除去（英語版同様）
+    text = text.replace('*', '').replace('#', '')
+
+    # 2. REVISEオプション対応（必要なら英語版同様にfirst passとrevisedスコアを区別）
+    if REVISE:
+        # first_pass部分抽出（"初回評価:"〜 "再評価:"まで）
+        # revised部分抽出
+        # ドイツ語や英語版を参考に、日本語での見出し（例: "初回評価:", "再評価:"）をプロンプト中で定義し、
+        # それに対応する正規表現を作成する。
+        first_pass_match = re.search(r'初回評価:(.*?)再評価:', text, re.DOTALL)
+        if first_pass_match:
+            first_pass_text = first_pass_match.group(1)
+            # 感情とスコアを抽出（例: r'([^:\s]+):\s*(\d+)）
+            first_pass_answers = dict(re.findall(r'([^:\s]+):\s*(\d+)', first_pass_text))
+        else:
+            first_pass_answers = {}
+
+        revised_match = re.search(r'再評価:(.*)', text, re.DOTALL)
+        if revised_match:
+            revised_text = revised_match.group(1)
+            revised_answers = dict(re.findall(r'([^:\s]+):\s*(\d+)', revised_text))
+        else:
+            revised_answers = {}
+
+    else:
+        # REVISE=Falseの場合は英語版同様、一括で感情名とスコアを抽出
+        # 正規表現パターンは日本語に合わせる: r'([^:\s]+):\s*(\d+)'など
+        pairs = re.findall(r'([^:\s]+):\s*(\d+)', text)
+        first_pass_answers = {label.strip(): score for label, score in pairs}
+        revised_answers = {}
+
+    return first_pass_answers, revised_answers
+
+
 # Calculate the score for an individual question using v2 scoring system
 def calculate_score_fullscale(reference, user):
 	# First check that the emotions specified in the answer match those in the reference
